@@ -1,4 +1,5 @@
 #include "pal4/object_transform_basis.h"
+#include "movement_vector_math.h"
 
 #include <bit>
 #include <cmath>
@@ -25,15 +26,7 @@ BehaviorVector3 Cross(const BehaviorVector3& a, const BehaviorVector3& b) {
 }
 
 BehaviorVector3 Normalize(const BehaviorVector3& value) {
-    const double length = std::sqrt(
-        static_cast<double>(value[0]) * value[0] +
-        static_cast<double>(value[1]) * value[1] +
-        static_cast<double>(value[2]) * value[2]);
-    if (!(length > 0.0)) return value;
-    const double reciprocal = 1.0 / length;
-    return {static_cast<float>(reciprocal * value[0]),
-            static_cast<float>(reciprocal * value[1]),
-            static_cast<float>(reciprocal * value[2])};
+    return movement_detail::Normalize(value);
 }
 
 }  // namespace
@@ -75,10 +68,7 @@ std::uint32_t ObjectTransformBasis::NormalizeFirstAxis(
     const auto first = Cross(reversed ? third : second,
                              reversed ? second : third);
     WriteAxis(state, 1u, first);
-    const double length = std::sqrt(
-        static_cast<double>(first[0]) * first[0] +
-        static_cast<double>(first[1]) * first[1] +
-        static_cast<double>(first[2]) * first[2]);
+    const auto length=movement_detail::Length(first);
     if (!(length > 0.0)) return state.words[3];
     WriteAxis(state, 1u, Normalize(first));
     return 0u;
@@ -101,7 +91,12 @@ std::uint32_t ObjectTransformBasis::SetThirdAxis(
 std::uint32_t ObjectTransformBasis::NormalizeAndProcess(
     ObjectMovementState& state, const BehaviorVector3& vector,
     IObjectTransformRuntime& runtime) {
-    return runtime.ProcessNormalized(state, Normalize(vector));
+    // 42B440 inlines X,Y,Z, unlike Matrix_Normalize42B300's call to
+    // CalculateDotProduct40BF20. Swap only the arithmetic input/output axes
+    // to reuse that PC24 implementation while preserving this association.
+    const auto normalized=Normalize({vector[2],vector[1],vector[0]});
+    return runtime.ProcessNormalized(state,
+        {normalized[2],normalized[1],normalized[0]});
 }
 
 BehaviorVector3& ObjectTransformBasis::ReorderAndNegate(

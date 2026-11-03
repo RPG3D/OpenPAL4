@@ -20,6 +20,7 @@
 #include "pal4/script_player_material.h"
 #include "pal4/script_player_garb.h"
 #include "pal4/script_random_player_position.h"
+#include "pal4/script_player_position.h"
 #include "pal4/script_world_misc.h"
 #include "pal4/script_camera_callbacks.h"
 #include "pal4/script_inventory_query.h"
@@ -514,6 +515,58 @@ int Run(pal4::NativeAngelScriptEngine& engine, asIScriptContext& context,
     return context.Execute();
 }
 
+void VerifyCurrentPlayerZ() {
+    struct Runtime final : pal4::IScriptPlayerPositionRuntime {
+        float z = -486.45147705078125f;
+        unsigned reads{};
+        float CurrentZ() override { ++reads; return z; }
+        [[noreturn]] static void Unexpected() {
+            throw std::logic_error("coordinate query must not move or queue player work");
+        }
+        std::uint32_t PlayerManager() override { Unexpected(); }
+        std::uint32_t PlayerByIndex(std::uint32_t, std::int32_t) override { Unexpected(); }
+        void SetPosition(std::uint32_t, const pal4::PlayerPosition&) override { Unexpected(); }
+        std::uint32_t CurrentPlayer(std::uint32_t) override { Unexpected(); }
+        std::string_view ActorName(std::uint32_t) override { Unexpected(); }
+        std::uint32_t NpcManager() override { Unexpected(); }
+        std::uint32_t NpcByName(std::uint32_t, std::string_view) override { Unexpected(); }
+        void SetNpcPosition(std::uint32_t, const pal4::PlayerPosition&, std::uint32_t) override { Unexpected(); }
+        std::int32_t SetNpcAction(std::uint32_t, std::string_view) override { Unexpected(); }
+        float MovementProperty(std::uint32_t) override { Unexpected(); }
+        std::uint32_t MovementAdapter() override { Unexpected(); }
+        void SelectAndUpdate(std::uint32_t, std::uint32_t, float, float, std::uint32_t) override { Unexpected(); }
+        bool CheckActive(std::uint32_t, std::uint32_t, float, float, std::uint32_t) override { Unexpected(); }
+        void UpdateFloorColor() override { Unexpected(); }
+        void UpdateGrid(std::uint32_t, std::uint32_t) override { Unexpected(); }
+        void SetAction(std::uint32_t, std::string_view) override { Unexpected(); }
+        pal4::PlayerPositionWaitState* Allocate(std::uint32_t) override { Unexpected(); }
+        std::uint32_t ScriptExecutor() override { Unexpected(); }
+        void Construct(pal4::PlayerPositionWaitState&, std::uint32_t, std::uint32_t) override { Unexpected(); }
+        void AssignName(pal4::PlayerPositionWaitState&, std::string_view) override { Unexpected(); }
+        void AddHandler(std::uint32_t, pal4::PlayerPositionWaitState*) override { Unexpected(); }
+        std::uint32_t CleanupName() override { Unexpected(); }
+    } runtime;
+    pal4::NativeAngelScriptEngine engine;
+    constexpr char source[] = "float CurrentZ(){return giPlayerCurrentGetPosZ();}"
+        "void Level(){if(giPlayerCurrentGetPosZ() < -1400.0f) global_mvar=1; else global_mvar=0;}";
+    Check(engine.Raw()->AddScriptSection("dispatch", "position.cs", source, sizeof(source)-1)>=0 &&
+          engine.Raw()->Build("dispatch")>=0, "compile original current-position declaration");
+    pal4::NativeGameScriptServices services; services.player_position=&runtime;
+    pal4::NativeGameScriptCallbacks callbacks(services); engine.SetCallbacks(&callbacks);
+    asIScriptContext* context{};
+    Check(engine.Raw()->CreateContext(&context)>=0 && context, "position query context");
+    Check(Run(engine,*context,"CurrentZ")==asEXECUTION_FINISHED &&
+          std::bit_cast<std::uint32_t>(context->GetReturnFloat())==std::bit_cast<std::uint32_t>(runtime.z),
+          "compiled coordinate query returns exact signed float");
+    runtime.z=-1400.25f;
+    Check(Run(engine,*context,"Level")==asEXECUTION_FINISHED && engine.GlobalStoryVariable()==1,
+          "M15 minimap predicate reads updated coordinate");
+    runtime.z=-1400.0f;
+    Check(Run(engine,*context,"Level")==asEXECUTION_FINISHED && engine.GlobalStoryVariable()==0 && runtime.reads==3u,
+          "M15 strict boundary is preserved without cached coordinate or queued side effects");
+    context->Release();
+}
+
 void VerifyRandomPlayerPosition() {
     struct Runtime final : pal4::IScriptRandomPlayerPositionRuntime {
         unsigned components{}, radii{}, checks{}, writes{}, grids{};
@@ -684,6 +737,7 @@ struct ObjectTouchRuntime final : pal4::IScriptObjectTouchRuntime {
 };
 }
 int main() {
+    VerifyCurrentPlayerZ();
     VerifyRandomPlayerPosition();
     VerifyGobDirectPosition();
     pal4::NativeAngelScriptEngine engine;

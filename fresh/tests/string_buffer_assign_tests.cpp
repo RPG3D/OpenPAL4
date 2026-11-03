@@ -47,6 +47,7 @@ public:
     }
     void Reallocate(pal4::StringBufferState& state,
                     std::uint32_t length) override {
+        length_before_reallocate = state.length;
         events.emplace_back("reallocate:" + std::to_string(length));
         state.data = 0x5001u;
         state.capacity = length + 8u;
@@ -84,6 +85,7 @@ public:
 
     std::unordered_map<std::uint32_t, std::uint8_t> bytes;
     std::vector<std::string> events;
+    std::uint32_t length_before_reallocate{};
     bool allocate_succeeds = true;
 };
 
@@ -359,6 +361,7 @@ void CheckAllocateTextCapacityPaths() {
     Check(large.AllocateText(10u, 1u, runtime) &&
               large.State().data == 0x5001u &&
               large.State().capacity == 18u &&
+              runtime.length_before_reallocate == 0u &&
               runtime.events == std::vector<std::string>{
                   "read:8192", "read:8192", "free:8192",
                   "reallocate:10"},

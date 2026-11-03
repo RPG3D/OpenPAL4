@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
+#include <new>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -23,6 +24,7 @@ struct Runtime final : pal4::IEffectSystemTextManagerRuntime {
     std::uint32_t nil = 0u;
     std::uint32_t references = 0u;
     std::uint32_t next_allocation = 0x4000u;
+    unsigned allocations{}, fail_at{};
 
     void WriteByte(std::uint32_t address, std::uint8_t value) override {
         bytes[address] = value;
@@ -31,6 +33,7 @@ struct Runtime final : pal4::IEffectSystemTextManagerRuntime {
         words[address] = value;
     }
     std::uint32_t Allocate(std::uint32_t size) override {
+        if (++allocations == fail_at) throw std::bad_alloc{};
         Check(size == 36u, "nil and head use 36-byte allocation");
         const auto result = next_allocation;
         next_allocation += 0x100u;
@@ -87,6 +90,29 @@ void TestReusedSharedNil() {
                   "allocate:20480", "references:3", "free:20480",
                   "allocate:20736"},
           "reused nil frees candidate and still allocates a fresh head");
+}
+
+void TestConstructionFailure() {
+    for (const bool survivor : {false,true}) {
+        for (const unsigned failure : {1u,2u}) {
+            Runtime runtime;
+            runtime.nil=survivor?0x9000u:0u;
+            runtime.references=survivor?2u:0u;
+            runtime.fail_at=failure;
+            bool threw{};
+            try {(void)pal4::EffectSystemTextManager::Construct(0x2000u,0u,runtime);}
+            catch (const std::bad_alloc&) {threw=true;}
+            Check(threw && runtime.nil==(survivor?0x9000u:0u) &&
+                runtime.references==(survivor?2u:0u),
+                "candidate/head failure preserves surviving domain references");
+            if (failure==2u)
+                Check(runtime.calls.back()==(survivor?"references:2":"free:16384"),
+                    "failed head releases only an unshared candidate");
+            runtime.fail_at=0u;
+            Check(pal4::EffectSystemTextManager::Construct(0x2000u,0u,runtime)==0x2000u &&
+                runtime.references==(survivor?3u:1u),"construction can retry after failure");
+        }
+    }
 }
 
 struct CleanupRuntime final : pal4::IEffectSystemTextManagerCleanupRuntime {
@@ -316,6 +342,7 @@ void TestClearElements() {
 int main() {
     TestNewSharedNil();
     TestReusedSharedNil();
+    TestConstructionFailure();
     TestDestructEmptyAndShared();
     TestDestructPopulatedAndFallback();
     TestLookup();

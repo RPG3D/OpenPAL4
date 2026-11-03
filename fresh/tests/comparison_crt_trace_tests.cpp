@@ -13,9 +13,11 @@ void TestScopedSources() {
     for(auto& value:expected)value=std::rand();
     pal4::NativeCrtSeedRandom(67531u,"scoped source fixture");
     {
+        const pal4::NativeCrtObservationOwnerScope owner(0x1234u);
         const pal4::NativeCrtObservationScope outer("fixture outer site");
         assert(pal4::NativeCrtRandom("fallback site")==expected[0]);
         try {
+            const pal4::NativeCrtObservationOwnerScope child(0x5678u);
             const pal4::NativeCrtObservationScope inner("fixture inner site");
             assert(pal4::NativeCrtRandom("fallback site")==expected[1]);
             throw 1;
@@ -23,13 +25,20 @@ void TestScopedSources() {
         // A helper thread must neither inherit nor overwrite the parent's site.
         std::thread other([] {
             assert(pal4::native_crt_observation_site==nullptr);
+            assert(pal4::native_crt_observation_owner==0u);
+            { const pal4::NativeCrtObservationOwnerScope local(0x789au); }
+            assert(pal4::native_crt_observation_owner==0u);
             { const pal4::NativeCrtObservationScope local("fixture worker site"); }
             assert(pal4::native_crt_observation_site==nullptr);
         });
         other.join();
+        assert(pal4::native_crt_observation_owner==0x1234u);
+        { const pal4::NativeCrtObservationOwnerScope clear(0u);
+          assert(pal4::native_crt_observation_owner==0u); }
         assert(pal4::NativeCrtRandom("fallback site")==expected[2]);
     }
     assert(pal4::native_crt_observation_site==nullptr);
+    assert(pal4::native_crt_observation_owner==0u);
     assert(pal4::NativeCrtRandom("fixture restored fallback")==expected[3]);
     std::ostringstream out;
     pal4::GetComparisonCrtTrace().Write(out);
@@ -43,7 +52,42 @@ void TestScopedSources() {
     assert(occurrences("fixture inner site")==1u);
     assert(occurrences("fixture restored fallback")==1u);
     assert(occurrences("fallback site")==0u);
+    const auto owner_count=[&](std::uintptr_t owner) {
+        const auto text=out.str();const auto needle="\"owner\":"+std::to_string(owner)+",";
+        std::size_t count=0,pos=0;
+        while((pos=text.find(needle,pos))!=std::string::npos){++count;pos+=needle.size();}
+        return count;
+    };
+    assert(owner_count(0x1234u)==2u && owner_count(0x5678u)==1u);
     assert(std::rand()==expected[4]);
+}
+
+void TestRecentRetention() {
+    // One fixed allocation; overwrite observation slots without changing RNG,
+    // the global ordinal, seed attribution or the independent script bucket.
+    pal4::ComparisonCrtTrace recent(true,3u,true);
+    recent.Add({1u,17u,7u});
+    for(unsigned i=1;i<=8u;++i)recent.Add({0u,i,7u,0x646b63u});
+    std::ostringstream out;recent.Write(out);
+    const auto text=out.str();
+    assert(text.find("\"count\":3,\"dropped\":6")!=std::string::npos);
+    assert(text.find("\"retention\":\"recent\",\"start_sequence\":6,\"next_sequence\":9")!=std::string::npos);
+    auto previous=std::size_t{};
+    for(unsigned i=6;i<=8;++i) {
+        const auto pos=text.find("\"sequence\":"+std::to_string(i)+",\"kind\":0,\"value\":"+std::to_string(i));
+        assert(pos!=std::string::npos && pos>=previous);previous=pos;
+        assert(text.find("\"full_sequence\":"+std::to_string(i))!=std::string::npos);
+    }
+    assert(text.find("\"value\":5,")==std::string::npos);
+    std::ostringstream focused;recent.WriteFocused(focused);
+    assert(focused.str().find("\"seed\":{\"sequence\":0,\"value\":17,\"thread\":7}")!=std::string::npos);
+    assert(focused.str().find("\"calls\":8,\"unclassified\":0")!=std::string::npos);
+    recent.Add({0u,29u,7u,0x5d400du});
+    std::ostringstream script;recent.WriteFocused(script);
+    assert(script.str().find("\"script_sequence\":9,\"script_value\":29")!=std::string::npos);
+    pal4::ComparisonCrtTrace empty(true,0u,true);
+    empty.Add({0u,1u});std::ostringstream zero;empty.Write(zero);
+    assert(zero.str().find("\"start_sequence\":1,\"next_sequence\":1")!=std::string::npos);
 }
 }
 
@@ -62,6 +106,7 @@ int main() {
         assert(std::rand()==expected[64]);
     }
     TestScopedSources();
+    TestRecentRetention();
     pal4::ComparisonCrtTrace disabled(false,1);
     disabled.Add({0,1});std::ostringstream off;disabled.Write(off);
     assert(off.str().find("\"count\":0")!=std::string::npos);

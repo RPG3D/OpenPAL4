@@ -6,6 +6,9 @@
 #include "pal4/native_npc_manager_owner.h"
 #include "pal4/grid_node_object.h"
 #include "pal4/spatial_grid_wrapper.h"
+#include "pal4/native_legacy_crt_math.h"
+#include "pal4/grid_manager.h"
+#include <float.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -24,6 +27,41 @@ void Check(bool condition, const char* message) {
 }
 template<class T> T& At(std::uint32_t address) {
     return *reinterpret_cast<T*>(static_cast<std::uintptr_t>(address));
+}
+void VerifyCapturedConstraintPower() {
+    struct Precision {
+        unsigned saved=_controlfp(0,0);
+        Precision(){(void)_controlfp(_PC_24,_MCW_PC);}
+        ~Precision(){(void)_controlfp(saved,_MCW_PC|_MCW_RC);}
+    } precision;
+    class Runtime final : public pal4::IGridManagerDirectionRuntime {
+    public:
+        bool legacy=true;
+        float ReadParameter(const pal4::GridManagerState&,std::uint32_t slot) override {
+            Check(slot==120u || slot==100u,"captured direction scalar slot");
+            return slot==120u?50.f:std::bit_cast<float>(1092307132u);
+        }
+        pal4::GridVector3 ReadNormal(const pal4::GridManagerState&) override {
+            return {std::bit_cast<float>(1060225766u),0.f,std::bit_cast<float>(1060649025u)};
+        }
+        pal4::GridVector3 ReadZeroVector() override {return {};}
+        double Power(double base,double exponent) override {
+            Check(base==static_cast<double>(std::bit_cast<float>(0x3f787460u)) && exponent==20.,
+                "captured power arguments retain original float division store");
+            return legacy?pal4::NativeLegacyCrtMath::Pow(base,exponent):std::pow(base,exponent);
+        }
+    } runtime;
+    const pal4::GridVector3 requested{std::bit_cast<float>(1087378139u),0.f,std::bit_cast<float>(3240483951u)};
+    pal4::GridManagerState state{};pal4::GridVector3 result{};
+    (void)pal4::GridManager::ConstrainVelocity(state,result,requested,runtime);
+    const auto original=std::bit_cast<std::array<std::uint32_t,3>>(result);
+    Check(original==std::array<std::uint32_t,3>{1090345308u,0u,3239397866u},
+        "public legacy power reproduces original helper8 constrained vector");
+    runtime.legacy=false;
+    (void)pal4::GridManager::ConstrainVelocity(state,result,requested,runtime);
+    Check(std::bit_cast<std::array<std::uint32_t,3>>(result)==
+        std::array<std::uint32_t,3>{1090345305u,0u,3239397867u},
+        "modern power reproduces former native helper8 fork");
 }
 // A helper ends exactly at a PAGE_NOACCESS boundary. Oversized host-state
 // reads as well as writes fault, including the short original BC/C0 images.
@@ -56,6 +94,7 @@ public:
 
 int main() {
     try {
+        VerifyCapturedConstraintPower();
         pal4::NativeBaseObjectMemory memory;
         pal4::NativeNpcManagerOwner manager;
         (void)manager.Construct();

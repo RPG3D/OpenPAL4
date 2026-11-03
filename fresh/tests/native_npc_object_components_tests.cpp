@@ -161,7 +161,7 @@ int main() {
                   pal4::CollisionActor::kVtableAddress &&
               document.DocumentCount() == 1u &&
               document.SharedNil() != 0u &&
-              memory.OutstandingAllocations() == 16u,
+              memory.OutstandingAllocations() == 15u,
           "native NPC component constructor owns base, document, task and tree");
     const auto event_document = state.words[
         (pal4::GameManagerComponents::kEventProcessorOffset + 16u) / 4u];
@@ -208,6 +208,38 @@ int main() {
     Check(processor.words[1]==processor.words[2] &&
         memory.OutstandingAllocations()==initial_allocations+1u,
         "NPC fuzzy clear releases event/documents and retains the processor pointer capacity");
+    auto multiple = fuzzy;
+    multiple.children = {atomic, atomic, atomic};
+    pal4::LoadNativeNpcBehaviorConfig(address, &multiple, document);
+    const auto multiple_event = memory.ReadDword(processor.words[1]);
+    const auto multiple_begin = memory.ReadDword(multiple_event + 24u);
+    Check(memory.ReadDword(multiple_event + 28u) - multiple_begin == 3u * 60u &&
+              memory.ReadDword(multiple_event + 32u) - multiple_begin == 4u * 60u,
+        "NPC behavior appends initialized records through original geometric array growth (IDA42D230/42DA10)");
+    for (std::uint32_t index = 0; index < 3u; ++index) {
+        const auto record = multiple_begin + index * 60u;
+        Check(document.NodeName(record) == "behAIAtomic-attribute" &&
+                  document.AttributeToInt(document.FindNumericAttribute(record,
+                      "behAIAtomic-classID"), -1) == 4 &&
+                  document.AttributeToInt(document.FindNumericAttribute(record,
+                      "behAIAtomic-proportion"), -1) == 37 &&
+                  document.AttributeToFloat(document.FindNumericAttribute(record,
+                      "beh-vtm-expectTime"), -1.f) == 2.5f,
+            "behavior node copies retain their names, attributes and wait parameters");
+    }
+    (void)pal4::ScriptEventProcessor::ClearEvents(processor, document);
+    Check(memory.OutstandingAllocations() == initial_allocations + 1u,
+        "incremental behavior construction releases copied nodes and transient documents");
+    auto partial = multiple;
+    partial.children[2].attributes[2].value = std::int32_t(0);
+    pal4::LoadNativeNpcBehaviorConfig(address, &partial, document);
+    const auto partial_event = memory.ReadDword(processor.words[1]);
+    Check(memory.ReadDword(partial_event + 16u) == 3u &&
+              memory.ReadDword(partial_event + 28u) - memory.ReadDword(partial_event + 24u) == 120u,
+        "invalid later NPC rule retains its already appended prefix and unpublished group mode");
+    (void)pal4::ScriptEventProcessor::ClearEvents(processor, document);
+    Check(memory.OutstandingAllocations() == initial_allocations + 1u,
+        "partially loaded NPC event remains safely owned by the processor");
     pal4::GameManagerComponents::Cleanup(state, address, runtime);
     Check(schema.resets == 3u &&
               document.DocumentCount() == 0u &&
@@ -293,7 +325,7 @@ int main() {
     pal4::NativeNpcObjectOwner owner(memory, schema, animation);
     const auto owned_address = owner.Construct();
     Check(owned_address != 0u && owner.Address() == owned_address &&
-              memory.OutstandingAllocations() == 16u,
+              memory.OutstandingAllocations() == 15u,
           "NPC component owner retains the complete native object image");
     owner.BindBorrowedActor(0x12345000u, 0x12346000u);
     pal4::GameResourceManagerRuntimeStub transform_runtime;

@@ -102,7 +102,7 @@ std::uint32_t GobObjectBase::UpdateClumpIfVisible(
 }
 
 std::uint32_t GobObjectBase::CreateParametersNode(
-    const std::uint32_t object, IGobObjectBaseRuntime& runtime) {
+    const std::uint32_t object, IGobObjectDocumentRuntime& runtime) {
     const auto old_document = runtime.ReadWord(object + 0x1c0u);
     if (old_document != 0u) {
         runtime.DestructXmlDocument(old_document);
@@ -110,11 +110,24 @@ std::uint32_t GobObjectBase::CreateParametersNode(
         runtime.WriteWord(object + 0x1c0u, 0u);
     }
     const auto memory = runtime.AllocateMemory(0x3cu);
-    const auto document = memory == 0u ? 0u :
-        runtime.InitializeXmlDocument(memory, "PAL4-GameObject", 0u);
+    std::uint32_t document{};
+    try {
+        document = memory == 0u ? 0u :
+            runtime.InitializeXmlDocument(memory, "PAL4-GameObject", 0u);
+    } catch (...) {
+        if(memory) (void)runtime.FreeMemory(memory);
+        throw;
+    }
     runtime.WriteWord(object + 0x1c0u, document);
-    return runtime.CreateXmlNode(document,
-                                 "PAL4-GameObject-Parameters");
+    try {return runtime.CreateXmlNode(document,"PAL4-GameObject-Parameters");}
+    catch (...) {
+        if(document) {
+            runtime.DestructXmlDocument(document);
+            (void)runtime.FreeMemory(document);
+            runtime.WriteWord(object+0x1c0u,0u);
+        }
+        throw;
+    }
 }
 
 std::uint32_t GobObjectBase::LoadAndInitialize(

@@ -4,6 +4,7 @@
 #include "pal4/xml_document_record.h"
 
 #include <span>
+#include <memory>
 #include <string>
 #include <string_view>
 
@@ -13,8 +14,9 @@ namespace pal4 {
 class NativeEventDocumentRuntime final : public IScriptEventProcessorRuntime,
                                          private IXmlDocumentRecordRuntime {
 public:
-    explicit NativeEventDocumentRuntime(IStringBufferStorageRuntime& memory)
-        : memory_(memory) {}
+    explicit NativeEventDocumentRuntime(IStringBufferStorageRuntime& memory);
+    NativeEventDocumentRuntime(const NativeEventDocumentRuntime&) = delete;
+    NativeEventDocumentRuntime& operator=(const NativeEventDocumentRuntime&) = delete;
 
     std::uint32_t Allocate(std::uint32_t bytes) override;
     std::uint32_t InitializeDocument(std::uint32_t address, const char* name,
@@ -27,6 +29,10 @@ public:
     void CleanupEventData(std::uint32_t address) override;
     [[nodiscard]] std::uint32_t AddEvent(
         ScriptEventProcessorState& state, const char* name);
+    // IDA42D230: populate a stack node, append its copy, destroy the temporary.
+    // Array growth can invalidate previously returned node addresses.
+    [[nodiscard]] std::uint32_t AppendBehaviorAtomic(std::uint32_t event,
+        std::int32_t class_id, std::int32_t proportion);
     void SetAtomicNodeNames(std::uint32_t event,
                             std::span<const std::string_view> names);
     void AddAtomicIntAttribute(std::uint32_t event, std::uint32_t index,
@@ -69,16 +75,26 @@ public:
     [[nodiscard]] std::uint32_t SharedNil() const noexcept {
         return globals_.nil_node;
     }
+    // References owned by this facade, rather than the shared allocation domain.
     [[nodiscard]] std::uint32_t DocumentCount() const noexcept {
+        return owned_document_count_;
+    }
+    // Original XML construction count across the allocation domain.
+    [[nodiscard]] std::uint32_t SharedDocumentCount() const noexcept {
         return globals_.construction_count;
     }
 
 private:
     class AttributeWriterRuntime;
+    class BehaviorAtomicRuntime;
     std::uint8_t InsertNativeAttribute(std::uint32_t node,
                                         std::uint32_t attribute);
     std::uint32_t AllocateMemory(std::uint32_t bytes) override;
     std::uint32_t FreeMemory(std::uint32_t address) override;
+    std::uint32_t AllocateSharedNil() override;
+    std::uint32_t FreeSharedNil(std::uint32_t address) override;
+    void DocumentReferenceAdded() noexcept override { ++owned_document_count_; }
+    void DocumentReferenceRemoved() noexcept override { --owned_document_count_; }
     void WriteWord(std::uint32_t address, std::uint32_t value) override;
     std::uint32_t ReadWord(std::uint32_t address) override;
     void WriteByte(std::uint32_t address, std::uint8_t value) override;
@@ -91,7 +107,8 @@ private:
     void RemoveNode(std::uint32_t document, std::uint32_t node) override;
     void GetFirstElement(std::uint32_t document) override;
     std::uint32_t EmptyTextAddress() override;
-    std::uint32_t CopyAttributeToTemporary(std::uint32_t source) override;
+    std::uint32_t CopyAttributeToTemporary(std::uint32_t source,
+        std::span<std::uint32_t, 7> storage) override;
     void DestroyTemporaryAttribute(std::uint32_t temporary) override;
     void CleanupNode(std::uint32_t node) override;
     void FreeAttributeValue(std::uint32_t attribute) override;
@@ -105,10 +122,10 @@ private:
                              std::uint32_t length) override;
     std::uint32_t FindAttributeNode(std::uint32_t tree,
                                     std::string_view name) override;
+    std::uint32_t FindAttributeNodeForAddition(std::uint32_t tree,
+                                    std::string_view name) override;
     std::uint32_t InsertAttributeNode(std::uint32_t tree,
-                                      std::string_view name) override;
-    void AssignAttributeValue(std::uint32_t destination,
-                              std::uint32_t source) override;
+        std::string_view name, std::uint32_t source) override;
     void DestroyEmbeddedAttribute(std::uint32_t attribute) override;
     std::int32_t CompareAttributeRange(std::uint32_t input,
                                        std::uint32_t node_text) override;
@@ -122,7 +139,10 @@ private:
                                    std::uint32_t bits);
 
     IStringBufferStorageRuntime& memory_;
-    XmlDocumentTreeGlobals globals_{};
+    IStringBufferStorageRuntime& shared_storage_;
+    std::shared_ptr<XmlDocumentTreeGlobals> shared_globals_;
+    XmlDocumentTreeGlobals& globals_;
+    std::uint32_t owned_document_count_{};
 };
 
 }  // namespace pal4

@@ -7664,14 +7664,14 @@ struct Services final : pal4::IApplicationGameServices,
     }
     pal4::NativeMilesSound2dRuntime& EnsureNativeScriptSound() {
         if (!native_sound_2d) {
-            Check(config_path && native_miles_driver && native_miles_driver->Handle() && native_settings,
-                  "script sound creation requires live game audio and settings owners");
+            Check(config_path && native_miles_driver && native_settings,
+                  "script sound preparation requires game audio and settings owners");
             auto sound = std::make_unique<pal4::NativeMilesSound2dRuntime>(
                 config_path->parent_path(), *native_miles_driver,
                 [](std::uint32_t source) -> std::string_view {
                     if (!source) return {};
                     return reinterpret_cast<const asCScriptString*>(source)->buffer;
-                });
+                },pal4::NativeMilesSound2dRuntime::DriverRequirement::Deferred);
             sound->SetVolume(native_settings->AudioLevel(1u));
             native_sound_2d = std::move(sound);
         }
@@ -8282,8 +8282,8 @@ struct Services final : pal4::IApplicationGameServices,
         if (!config_path || !native_player_session || !native_player_actors ||
             !native_player_materials || !native_player_activity || !native_packages || !native_script_player_actions)
             throw std::logic_error("player load services require persistent game owners");
-        // Construct the resolver before any scene exists. Animation bindings remain
-        // lazy: At/For may only run after the corresponding actor has been loaded.
+        // Prepare the stable resolver before resources exist. Role loading binds
+        // each slot after its actor is published, before menu/scene entry.
         native_player_animations = std::make_unique<pal4::NativePlayerAnimationSet>(
             native_player_session->State(), *native_player_actors,
             native_player_memory, native_player_animation, config_path->parent_path());
@@ -8661,9 +8661,9 @@ struct Services final : pal4::IApplicationGameServices,
               "player scene uses a valid saved leader index");
         auto& current = native_player_session->State().slots[leader].base;
         native_player_animation_binding = &native_player_animations->For(current);
-        // Unchanged models intentionally skip ScriptProcessAndCleanup reload.
-        // The startup asset already owns clips, but its host animation view is
-        // lazy. Materialize that view before the shared scene loader selects C01.
+        // Unchanged models skip ScriptProcessAndCleanup reload. An archive
+        // adapter may reuse assets after explicitly releasing animation records;
+        // restore that binding before the shared scene loader selects C01.
         if (!native_player_animation_binding->Bound()) {
             const auto model = current.Read(0xcu);
             Check(model != 0u, "restored scene leader retains a model name");
@@ -9578,11 +9578,10 @@ struct Services final : pal4::IApplicationGameServices,
             native_miles_driver =
                 std::make_unique<pal4::NativeMilesDigitalDriver>(
                     config_path->parent_path().string());
-            Check(native_miles_driver->Open(),
-                  "initialize original Miles driver before game systems");
-            native_miles_driver->SetMasterVolume(0.0f);
             native_hud_sounds = std::make_unique<pal4::NativeMilesSound2dRuntime>(
-                config_path->parent_path(), *native_miles_driver);
+                config_path->parent_path(), *native_miles_driver,
+                pal4::NativeMilesSound2dRuntime::SoundNameResolver{},
+                pal4::NativeMilesSound2dRuntime::DriverRequirement::Deferred);
             native_ui_sound_playback = std::make_unique<pal4::NativeUiSoundPlayback>(*native_hud_sounds);
         }
     }
@@ -10256,7 +10255,7 @@ struct Services final : pal4::IApplicationGameServices,
                     native_player_session->CopyRuntime(),
                     native_actor_session->Runtime(), 0u,
                     native_player_actors.get(), &native_player_transforms,
-                    native_packages, native_reset_ops.get());
+                    native_packages, native_reset_ops.get(),native_player_animations.get());
             const auto texture_reader_before_logo =
                 RwTextureGetReadCallBack();
             const std::string image_path_before_actor =
@@ -12779,18 +12778,22 @@ struct Services final : pal4::IApplicationGameServices,
             native_floor_service_identities = {
                 native_scene_player_movement->Address(), native_floor_attribute->StateAddress(),
                 native_temperature_manager->Address()};
-            native_music_started = native_script_music->Start();
-            Check(native_music_started,
-                  "play original P01-1.smp through the shared Miles driver");
-            native_background_music_player.SetCurrentTrack("P01-1");
-            native_background_music_player.SetAudioHandle(
-                pal4::NativeBackgroundMusicRuntime::kOpeningHandle);
             EnsureNativeSceneEffects();
             native_script_session->BindServices(PrimaryScriptServices());
             native_script_session->BindEventServices(EventServices());
             // IDA Game_InitializeSystems 5B5FA6 loads all four Role records
             // before the menu; archive preparation reads those existing keys.
             native_new_game->LoadAndProcessPlayerData(native_player_session->Address());
+            // IDA5B5FA6/5B5FBE precede AudioSystem_Initialize at5B5FD8.
+            // Opening Miles before WinMain loaded Windows.UI before game assets.
+            Check(!native_miles_driver->Handle() && native_player_actors->Count()==4u && native_ui.Started(),
+                  "audio driver remains closed until Role and CEGUI initialization");
+            Check(native_miles_driver->Open(),"initialize original Miles driver after game resources");
+            native_miles_driver->SetMasterVolume(0.0f);
+            native_music_started = native_script_music->Start();
+            Check(native_music_started,"play original P01-1.smp through initialized Miles driver");
+            native_background_music_player.SetCurrentTrack("P01-1");
+            native_background_music_player.SetAudioHandle(pal4::NativeBackgroundMusicRuntime::kOpeningHandle);
             if(input_load_smoke){
                 pal4::test::VerifyNativeCombatPlayerReplacement(config_path->parent_path(),*native_player_session,
                     native_database,*native_skill_system,*native_scene_effects,*native_packages,*native_game_texture_storage);
@@ -13750,6 +13753,10 @@ struct Services final : pal4::IApplicationGameServices,
         return native_second_scene_npcs ? native_second_scene_npcs.get()
                                         : native_opening_scene_npcs.get();
     }
+    const pal4::NativeArenaNpcSceneLoader* CurrentSceneNpcs() const noexcept {
+        return native_second_scene_npcs ? native_second_scene_npcs.get()
+                                        : native_opening_scene_npcs.get();
+    }
     void BindNativeNpcBehavior() {
         auto* npcs=CurrentSceneNpcs();
         Check(npcs && native_path_planner && native_arena_scene_stage,
@@ -14218,7 +14225,7 @@ struct Services final : pal4::IApplicationGameServices,
         }
         result.inventory_address=native_inventory.Address();
         result.gob_manager_address=native_scene_gob_assets.ManagerAddress();
-        if(native_npc_manager)result.npc_manager_address=native_npc_manager->Address();
+        if(const auto* npcs=CurrentSceneNpcs())result.npc_manager_address=npcs->Manager().Address();
         if(native_monster_manager)result.monster_manager_address=native_monster_manager->Address();
         if(result.inventory_address)result.money=*reinterpret_cast<const std::int32_t*>(result.inventory_address+0x134u);
         if(native_common_dialog_cache)

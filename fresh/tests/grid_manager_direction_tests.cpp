@@ -30,6 +30,7 @@ public:
     pal4::GridVector3 ReadZeroVector() override {
         return {0.0f, 0.0f, 0.0f};
     }
+    double Power(double base,double exponent) override {return std::pow(base,exponent);}
     float limit_source = 20.0f;
     float speed = 2.0f;
     std::vector<std::uint32_t> reads;

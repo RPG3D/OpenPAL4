@@ -36,7 +36,12 @@ def main():
              'fresh/ports/tools/audit_source_repository.py',
              'fresh/ports/tools/audit_release.py', 'fresh/ports/tools/test_audit_release.py'}
     notes.update(p.relative_to(ROOT).as_posix() for p in (ROOT / 'licenses').rglob('*') if p.is_file())
-    paths = sorted(set(p for p in tracked if p and p.startswith(PREFIXES)) | ROOT_FILES | notes)
+    untracked = subprocess.check_output(
+        ['git', 'ls-files', '--others', '--exclude-standard', '-z'], cwd=ROOT
+    ).decode().split('\0')
+    # New headers/tests can be dependencies of modified tracked sources. Include
+    # them within the same allowlist so an export never silently omits them.
+    paths = sorted(set(p for p in tracked + untracked if p and p.startswith(PREFIXES)) | ROOT_FILES | notes)
     if any(p not in paths or p not in tracked for p in args.committed_path):
         parser.error('--committed-path must name a tracked file included in this snapshot')
     output.mkdir(parents=True)

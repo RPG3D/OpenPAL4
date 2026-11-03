@@ -14,6 +14,10 @@ public:
     virtual void WriteWord(std::uint32_t address, std::uint32_t value) = 0;
     [[nodiscard]] virtual std::uint32_t Allocate(std::uint32_t bytes) = 0;
     virtual void Free(std::uint32_t address) = 0;
+    // A shared sentinel can outlive the facade that first constructs it.
+    // Heads and ordinary tree nodes keep their existing local allocation owner.
+    [[nodiscard]] virtual std::uint32_t AllocateSharedNil() { return Allocate(36u); }
+    virtual void FreeSharedNil(std::uint32_t address) { Free(address); }
     [[nodiscard]] virtual std::uint32_t SharedNil() = 0;
     virtual void SetSharedNil(std::uint32_t address) = 0;
     [[nodiscard]] virtual std::uint32_t SharedNilReferences() = 0;
@@ -31,6 +35,7 @@ public:
     virtual void EraseNode(std::uint32_t manager, std::uint32_t node) = 0;
     virtual void GetFirstElement(std::uint32_t manager) = 0;
     [[nodiscard]] virtual std::uint32_t Free(std::uint32_t address) = 0;
+    [[nodiscard]] virtual std::uint32_t FreeSharedNil(std::uint32_t address) { return Free(address); }
     [[nodiscard]] virtual std::uint32_t SharedNil() = 0;
     virtual void SetSharedNil(std::uint32_t address) = 0;
     [[nodiscard]] virtual std::uint32_t SharedNilReferences() = 0;

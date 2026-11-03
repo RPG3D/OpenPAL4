@@ -8,6 +8,7 @@
 #include <array>
 #include <functional>
 #include <optional>
+#include <memory>
 #include <string_view>
 #include <utility>
 
@@ -15,6 +16,8 @@ namespace pal4 {
 
 class IGameResourceManagerRuntime;
 class NativeSceneMovementAsset;
+class NativeGobConfigDocument;
+class NativeEventDocumentRuntime;
 struct GameResourceManager;
 
 class INativeGobPlatformService {
@@ -83,8 +86,7 @@ public:
 class NativeGobObjectImage final {
 public:
     NativeGobObjectImage(NativeBaseObjectMemory& memory,
-                         IRwDictSchemaRuntime& schema)
-        : memory_(memory), schema_(schema) {}
+                         IRwDictSchemaRuntime& schema);
     ~NativeGobObjectImage();
     NativeGobObjectImage(const NativeGobObjectImage&) = delete;
     NativeGobObjectImage& operator=(const NativeGobObjectImage&) = delete;
@@ -132,13 +134,16 @@ public:
     [[nodiscard]] std::uint32_t Address() const noexcept { return object_; }
     [[nodiscard]] std::uint32_t Type() const noexcept { return type_; }
     [[nodiscard]] bool Bound() const noexcept { return bound_; }
+    [[nodiscard]] std::uint32_t ConfigurationAddress() const noexcept;
+    NativeEventDocumentRuntime& ConfigurationDocuments();
 
 private:
     class Runtime;
-    void ApplySceneConfiguration(const NativeSceneGobRecord& record);
-    void ApplyActionConfiguration(const NativeSceneGobRecord& record);
+    void ApplySceneConfiguration();
+    void ApplyActionConfiguration();
     NativeBaseObjectMemory& memory_;
     IRwDictSchemaRuntime& schema_;
+    std::unique_ptr<NativeGobConfigDocument> config_document_;
     std::uint32_t object_ = 0u;
     std::uint32_t type_ = 0u;
     bool bound_ = false;

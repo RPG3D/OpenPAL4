@@ -1,4 +1,5 @@
 #include "pal4/grid_manager.h"
+#include "support/random_movement_x87_reference.h"
 
 #include <bit>
 #include <cmath>
@@ -184,6 +185,23 @@ void MathHelpers() {
           "position helper samples velocity before position and integrates");
 }
 
+void CapturedFirstFrameSpeed() {
+    // Pair301 helper0, first frame. The acceleration and velocity operands
+    // match, but the old wide norm reports3C678E33 vs original3C678E34.
+    Runtime runtime;runtime.dt=0.f;runtime.acceleration={};
+    runtime.velocity={std::bit_cast<float>(0xbc081ad8u),0.f,
+                      std::bit_cast<float>(0xbc3b5514u)};
+    pal4::GridManagerState state{};
+#if defined(_MSC_VER) && defined(_M_IX86)
+    Check(std::bit_cast<std::uint32_t>(pal4::test::MovementVectorLengthPc24(
+              runtime.velocity))==1013419572u,
+          "captured original first-frame speed reproduced by x87 instructions");
+#endif
+    (void)pal4::GridManager::UpdatePositionAndVelocity(state,7.f,0.f,runtime);
+    Check(std::bit_cast<std::uint32_t>(runtime.reported_speed)==1013419572u,
+          "first-frame helper speed preserves original PC24 dot and square root");
+}
+
 }  // namespace
 
 int main() {
@@ -191,5 +209,7 @@ int main() {
     NegativeStepAndSpeedCap();
     PhysicsProjection();
     MathHelpers();
+    CapturedFirstFrameSpeed();
     std::cout << "Grid manager motion tests passed\n";
+    return 0;
 }

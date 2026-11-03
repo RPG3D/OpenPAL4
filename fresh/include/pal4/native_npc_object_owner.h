@@ -61,7 +61,7 @@ public:
     void Destroy();
     [[nodiscard]] std::uint32_t Address() const noexcept { return object_; }
     [[nodiscard]] bool ActorBound() const noexcept { return actor_bound_; }
-    // Memory-document operations must use their constructing runtime's tree nil.
+    // Use the constructing runtime for local ownership; its allocation domain shares the tree nil.
     [[nodiscard]] NativeEventDocumentRuntime& BehaviorDocuments() noexcept { return document_; }
 
 private:

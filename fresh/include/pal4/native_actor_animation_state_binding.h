@@ -105,6 +105,7 @@ private:
 
     void EnsureRecordEvents(std::string_view action);
     void InitializeActionTable();
+    void InitializeBlendSnapshots();
 };
 
 }  // namespace pal4

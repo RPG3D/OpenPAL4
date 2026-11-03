@@ -1,8 +1,11 @@
 #include "support/native_monster_path_replay.h"
+#include "support/native_actor_load_order_probe.h"
+#include "support/native_gob_retained_config_probe.h"
 #include "support/native_world_texture_isolation_probe.h"
 #include "support/native_scene_translation_replay.h"
 #include "pal4/camera_render_pass_native.h"
 #include "support/native_atomic_sphere_probe.h"
+#include "support/native_actor_load_bounds_probe.h"
 #include "support/native_tree_collision_probe.h"
 #include "support/native_m07_npc_path_probe.h"
 #include "pal4/camera_render_lifecycle_native.h"
@@ -855,11 +858,19 @@ int main(int argc, char** argv) {
     std::cout.setf(std::ios::unitbuf);
     _set_abort_behavior(0u, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
     try {
-        Check(argc == 2 || (argc==4 && (std::string_view(argv[2])=="--monster-path-replay" || std::string_view(argv[2])=="--scene-translation-replay" || std::string_view(argv[2])=="--scene-movement-probe")) || (argc==3 && (std::string_view(argv[2])=="--cave-worlds" || std::string_view(argv[2])=="--ui-components" || std::string_view(argv[2])=="--property-preview" || std::string_view(argv[2])=="--system-property" || std::string_view(argv[2])=="--equipment-preview" || std::string_view(argv[2])=="--smith-preview" || std::string_view(argv[2])=="--ui-world-render" || std::string_view(argv[2])=="--m07-npc-path" || std::string_view(argv[2])=="--world-texture-isolation" || std::string_view(argv[2])=="--combat-world-materials")), "original game root argument");
+        Check(argc == 2 || (argc==4 && (std::string_view(argv[2])=="--monster-path-replay" || std::string_view(argv[2])=="--scene-translation-replay" || std::string_view(argv[2])=="--scene-movement-probe")) || (argc==3 && (std::string_view(argv[2])=="--actor-load-bounds" || std::string_view(argv[2])=="--cave-worlds" || std::string_view(argv[2])=="--ui-components" || std::string_view(argv[2])=="--property-preview" || std::string_view(argv[2])=="--system-property" || std::string_view(argv[2])=="--equipment-preview" || std::string_view(argv[2])=="--smith-preview" || std::string_view(argv[2])=="--ui-world-render" || std::string_view(argv[2])=="--m07-npc-path" || std::string_view(argv[2])=="--world-texture-isolation" || std::string_view(argv[2])=="--combat-world-materials")), "original game root argument");
         const std::filesystem::path root(argv[1]);
         pal4::test::NativeDesktopObservation desktop;
         RenderWareSession session;
         session.Open();
+        if(argc==3 && std::string_view(argv[2])=="--actor-load-bounds") {
+            pal4::NativeBaseObjectMemory memory;
+            pal4::test::RwDictSchemaFake schema;
+            EmptyMonsterAnimationRuntime animation(memory);
+            pal4::test::VerifyNative472LoadBounds(root,memory,schema,animation);
+            Check(memory.OutstandingAllocations()==0u,"472 bounds scene resources retire");
+            desktop.Check("472 bounds probe preserves focus and cursor");return 0;
+        }
         if(argc==3 && std::string_view(argv[2])=="--cave-worlds"){
             for(const char* section:{"1","2","3"}){
                 pal4::NativeWorldAsset world;
@@ -1046,8 +1057,15 @@ int main(int argc, char** argv) {
               "load original shadow hook exception names");
         for (const std::string_view model : {"101", "103", "106", "105"}) {
             pal4::NativeActorClumpAsset clump;
-            Check(clump.Load(root, model),
-                  "stream original actor clump and shadow");
+            Check(!clump.LoadShadow(),"shadow phase rejects an unloaded main");
+            Check(clump.LoadMain(root, model) && clump.Main() && !clump.Shadow() && !clump.ShadowLight(),
+                  "main phase owns geometry without allocating the later shadow");
+            auto* retained_main=clump.Main();
+            Check(clump.LoadShadow() && clump.Main()==retained_main,
+                  "later shadow phase retains the original main clump");
+            auto* retained_shadow=clump.Shadow();
+            Check(!clump.LoadShadow() && clump.Main()==retained_main && clump.Shadow()==retained_shadow,
+                  "duplicate shadow phase cannot replace existing resources");
             using TexturePointers=std::vector<RwTexture*>;
             const auto collect=[](RpAtomic* atomic,void* data)->RpAtomic* {
                 auto* geometry=RpAtomicGetGeometry(atomic);
@@ -1149,9 +1167,12 @@ int main(int argc, char** argv) {
             clump.Unload();
             Check(!clump.ShadowLight(),"actor clump unload retires shadow light before its frame hierarchy");
             pal4::NativeAnimatedActorAsset actor;
-            if (!actor.Load(root, model))
-                std::cerr << "Model " << model << ": "
-                          << actor.LastError() << '\n';
+            {
+                pal4::test::ActorLoadOrderProbe order(actor);
+                if (!actor.Load(root, model))
+                    std::cerr << "Model " << model << ": " << actor.LastError() << '\n';
+                Check(order.Passed(),"actual SDK animation allocations precede shadow publication");
+            }
             Check(actor.Main() && actor.Shadow() && actor.ShadowLight() && actor.Hierarchy() &&
                       actor.ActionCount() == catalog.Entries().size() &&
                       actor.CurrentAction() == catalog.Entries().front().first &&
@@ -2487,6 +2508,7 @@ int main(int argc, char** argv) {
             Check(objects.Load(root,"Q01","Q01",transforms,memory,schema,
                                gob_packages,gob_effects.GobEffects()) && objects.Size()==48u,
                   "load all six original Q01 GOB types for real SDK activity cleanup");
+            pal4::test::VerifyNativeGobRetainedConfig(objects);
             const auto manager=objects.ManagerAddress();
             const auto header=memory.ReadDword(manager+4u);
             const auto factories=memory.ReadDword(manager+0x18u);
@@ -2617,12 +2639,47 @@ int main(int argc, char** argv) {
         pal4::NativePlayerTransformRuntime transforms;
         RoleLoadHost role_host;
         pal4::NativeRoleRecordCatalog role_records(database);
-        pal4::NativePlayerRoleLoadRuntime roles(
-            role_records, role_host, copier, &players, &transforms);
-        Check(pal4::PlayerManagerLoader::Load(
-                  reinterpret_cast<std::uint32_t>(&player_slots), roles) ==
-                  0x49u && players.Count() == 4u,
-              "original Role loader binds all four player actor resources");
+        {
+            pal4::NativeBaseObjectMemory role_animation_memory;
+            EmptyMonsterAnimationRuntime role_lifecycle(role_animation_memory);
+            for(auto& slot:player_slots.slots) {
+                auto& state=*reinterpret_cast<pal4::GameObjectEmbeddedAnimationState*>(
+                    reinterpret_cast<std::uintptr_t>(&slot)+0x170u);
+                (void)pal4::GameObjectEmbeddedAnimation::InitializeState(state,0u,role_lifecycle);
+            }
+            pal4::NativePlayerAnimationSet role_animations(player_slots,players,
+                role_animation_memory,role_lifecycle,root);
+            pal4::NativePlayerRoleLoadRuntime roles(role_records,role_host,copier,
+                &players,&transforms,nullptr,nullptr,&role_animations);
+            Check(pal4::PlayerManagerLoader::Load(
+                      reinterpret_cast<std::uint32_t>(&player_slots),roles)==0x49u && players.Count()==4u,
+                  "original Role loader binds all four player actor resources");
+            for(std::size_t index=0;index<4;++index) {
+                const auto& base=player_slots.slots[index].base;
+                const auto* first=reinterpret_cast<const RtAnimInterpolator*>(base.Read(0x180u));
+                const auto* second=reinterpret_cast<const RtAnimInterpolator*>(base.Read(0x184u));
+                Check(role_animations.At(index).Bound() && base.Read(0x174u)==base.Read(0x14u) &&
+                          base.Read(0x178u) && base.Read(0x17cu) && first && second && first!=second &&
+                          !first->pCurrentAnim && !second->pCurrentAnim &&
+                          first->numNodes==players.At(index).Hierarchy()->numNodes &&
+                          first->maxInterpKeyFrameSize==players.At(index).Hierarchy()->currentAnim->maxInterpKeyFrameSize,
+                      "every loaded Role has counted records and two initial SDK blend snapshots before scene entry");
+            }
+            std::array<const pal4::NativeActorAnimationStateBinding*,4> role_bindings{};
+            for(std::size_t index=0;index<4;++index)role_bindings[index]=&role_animations.At(index);
+            roles.RollbackActors();
+            Check(players.Count()==0u && role_animation_memory.OutstandingAllocations()==0u,
+                  "Role rollback releases all animation records before unloading their SDK clips");
+            Check(pal4::PlayerManagerLoader::Load(reinterpret_cast<std::uint32_t>(&player_slots),roles)==0x49u && players.Count()==4u,
+                  "Role loader retries after actual four-actor rollback");
+            for(std::size_t index=0;index<4;++index)
+                Check(&role_animations.At(index)==role_bindings[index] && role_bindings[index]->Bound(),
+                      "Role rollback and retry preserve stable per-slot animation owners");
+            roles.CommitActors();
+            role_animations.Release();
+            Check(role_animation_memory.OutstandingAllocations()==0u,
+                  "four Role animation owners release records before their borrowed actor resources");
+        }
         constexpr std::array<std::string_view, 4> models{
             "101", "103", "106", "105"};
         constexpr std::array<std::string_view, 4> names{
@@ -2685,8 +2742,11 @@ int main(int argc, char** argv) {
                 animation_memory, lifecycle, root);
             auto& binding = animations.At(0u);
             binding.Bind();
+            const auto initial_from=animation.words[4u],initial_to=animation.words[5u];
+            Check(initial_from && initial_to && initial_from!=initial_to,
+                  "ordinary Bind creates both SDK snapshots before the first blend request");
             Check(binding.Select("C01") && binding.SelectBlended("C01", 0.1f) &&
-                      binding.AdvanceBlend(0.05f),
+                      binding.AdvanceBlend(0.05f) && animation.words[4u]==initial_from && animation.words[5u]==initial_to,
                   "original player binding owns live animation and blend state");
             Check(binding.Select("z03"),
                   "M06 lowercase script action selects original uppercase Z03");

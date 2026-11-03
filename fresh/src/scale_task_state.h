@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pal4/scale_task.h"
+#include "pal4/effect_task_timing.h"
 
 #include <bit>
 #include <cstddef>
@@ -33,10 +34,12 @@ inline void WriteVector(ScaleTaskState& state, std::size_t word,
 }
 inline float BiasedDuration(const ScaleTaskState& state,
                             IScaleTaskRuntime& runtime) {
-    const auto bias = static_cast<double>(ReadFloat(state, 29u));
-    return static_cast<float>(static_cast<double>(ReadFloat(state, 5u)) +
-        static_cast<double>(runtime.RandomInt()) * (2.0 * bias) *
-        0.000030518509447574615 - bias);
+    // Original62349E..6234B9 /62372A..623758 round each operation at PC24,
+    // adding negative bias before the initial duration. Keep the CRT draw
+    // in the runtime; only the game arithmetic is shared with ChangeColor.
+    const auto initial = ReadFloat(state, 5u);
+    const auto bias = ReadFloat(state, 29u);
+    return RandomizedEffectDuration(runtime.RandomInt(), initial, bias);
 }
 
 }  // namespace pal4::scale_task_detail

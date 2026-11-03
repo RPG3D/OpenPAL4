@@ -13,6 +13,11 @@ public:
     [[nodiscard]] virtual std::uint32_t ReadDword(std::uint32_t address) = 0;
     virtual void WriteDword(std::uint32_t address, std::uint32_t value) = 0;
     virtual void WriteByte(std::uint32_t address, std::uint8_t value) = 0;
+    // Stable storage for shared records in this allocation domain. Independent
+    // address spaces/allocators retain their own service by default.
+    [[nodiscard]] virtual IStringBufferStorageRuntime& SharedRecordStorage() noexcept {
+        return *this;
+    }
 };
 
 class IStringBufferRuntime : public IStringBufferStorageRuntime {

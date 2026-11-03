@@ -3,6 +3,7 @@
 #include "pal4/native_gob_local_float_memory.h"
 #include "pal4/native_gob_random_delay.h"
 #include "pal4/native_scene_gob_catalog.h"
+#include "pal4/native_event_document_runtime.h"
 #include <cmath>
 #include <cstring>
 #include <functional>
@@ -13,29 +14,26 @@ namespace pal4 {
 // scene's staged loader; it must not be initiated again by a config reset.
 class NativeGobObstacleConfig final : public IGobObstacleConfigRuntime {
 public:
-    NativeGobObstacleConfig(NativeBaseObjectMemory& memory,const BinaryXmlNode& root,
+    NativeGobObstacleConfig(NativeBaseObjectMemory& memory,NativeEventDocumentRuntime& documents,
         std::uint32_t object,std::function<void()> machine)
-        :memory_(memory),root_(root),object_(object),machine_(std::move(machine)){}
+        :memory_(memory),documents_(documents),object_(object),machine_(std::move(machine)){}
     void LoadMachineConfig(std::uint32_t p) override{Require(p);machine_();}
     std::uint32_t ReadWord(std::uint32_t p) override{
-        return p==object_+0x1c0u?reinterpret_cast<std::uint32_t>(&root_):memory_.ReadDword(p);
+        return memory_.ReadDword(p);
     }
     void WriteWord(std::uint32_t p,std::uint32_t v) override{memory_.WriteDword(p,v);}
     void WriteFloat(std::uint32_t p,float v) override{WriteWord(p,std::bit_cast<std::uint32_t>(v));}
     std::uint32_t FindXmlChild(std::uint32_t p,std::string_view name) override{
-        if(!p)return 0u;
-        for(const auto& n:reinterpret_cast<const BinaryXmlNode*>(p)->children)
-            if(n.name==name)return reinterpret_cast<std::uint32_t>(&n);
-        return 0u;
+        return documents_.FindChild(p,name);
     }
     std::int32_t ReadConfigInt(std::uint32_t p,std::string_view key,std::int32_t fallback) override{
-        const auto* a=Node(p).FindAttribute(key);return a?std::bit_cast<std::int32_t>(a->ToInt(static_cast<std::uint32_t>(fallback))):fallback;
+        const auto a=documents_.FindNumericAttribute(p,key);return a?documents_.AttributeToInt(a,fallback):fallback;
     }
     float ReadConfigFloat(std::uint32_t p,std::string_view key,float fallback) override{
-        const auto* a=Node(p).FindAttribute(key);return a?a->ToFloat(fallback):fallback;
+        const auto a=documents_.FindNumericAttribute(p,key);return a?documents_.AttributeToFloat(a,fallback):fallback;
     }
     std::string ReadConfigString(std::uint32_t p,std::string_view key,std::string_view fallback) override{
-        const auto* a=Node(p).FindAttribute(key);const auto* s=a?std::get_if<std::string>(&a->value):nullptr;return s?*s:std::string(fallback);
+        const auto a=documents_.FindNumericAttribute(p,key);return a?documents_.AttributeToString(a):std::string(fallback);
     }
     void AssignStringRecord(std::uint32_t p,std::string_view value) override{
         if(p!=object_+0x308u && p!=object_+0x320u)throw std::invalid_argument("Obstacle launch string");
@@ -50,7 +48,6 @@ public:
     float RandomDelay(float a,float b,float seed) override{return NativeGobRandomDelay(a,b,seed);}
 private:
     void Require(std::uint32_t p){if(p!=object_)throw std::invalid_argument("Obstacle config owner");}
-    const BinaryXmlNode& Node(std::uint32_t p){if(!p)throw std::invalid_argument("Obstacle config node");return *reinterpret_cast<const BinaryXmlNode*>(p);}
     [[noreturn]] static void LoadBoundary(){throw std::logic_error("Obstacle config reset cannot initiate a scene load");}
     void CleanupBeforeSceneLoad(std::uint32_t) override{LoadBoundary();}
     bool UsesObjectPackage(std::string_view) override{LoadBoundary();}
@@ -65,7 +62,7 @@ private:
     void RemoveXmlChild(std::uint32_t,std::uint32_t) override{LoadBoundary();}
     std::uint32_t CreateXmlChild(std::uint32_t,std::string_view) override{LoadBoundary();}
     NativeBaseObjectMemory& memory_;
-    const BinaryXmlNode& root_;
+    NativeEventDocumentRuntime& documents_;
     std::uint32_t object_;
     std::function<void()> machine_;
 };

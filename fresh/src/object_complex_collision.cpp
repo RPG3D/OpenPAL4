@@ -134,10 +134,10 @@ BehaviorVector3& ObjectComplexCollision::Process(
         const auto other_forward = runtime.Forward(other);
         const auto projected_self = Add(
             runtime.Position(self_address),
-            Scale(self_forward, self_speed * time));
+            Scale(Scale(self_forward, self_speed), time));
         const auto projected_other = Add(
             runtime.Position(other),
-            Scale(other_forward, other_speed * time));
+            Scale(Scale(other_forward, other_speed), time));
         Store(state, 18u, projected_self);
         Store(state, 15u, projected_other);
         if (!(Length(Subtract(projected_self, projected_other)) < diameter))

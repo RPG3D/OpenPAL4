@@ -1,4 +1,5 @@
 #include "pal4/behavior_helper_physics.h"
+#include "pal4/comparison_helper_interpolation_trace.h"
 #include "pal4/grid_manager.h"
 #include "pal4/object_movement_vectors.h"
 #include "pal4/object_movement_scalars.h"
@@ -26,13 +27,21 @@ class Runtime final : public IGridManagerMotionRuntime,
     private IGridManagerDirectionRuntime,private IGridManagerVelocityRuntime,
     private IObjectMovementScalarRuntime,private IObjectTransformRuntime {
 public:
-    explicit Runtime(const BehaviorVector3& requested):requested_(requested) {}
-    GridVector3 CalculateAcceleration(GridManagerState& state,float input,float) override {
+    explicit Runtime(const BehaviorVector3& requested,BehaviorHelperPhysics::Power power=nullptr)
+        :requested_(requested),power_(power) {}
+    GridVector3 CalculateAcceleration(GridManagerState& state,float input,float elapsed) override {
         if(std::bit_cast<std::uint32_t>(input)!=
             std::bit_cast<std::uint32_t>(kRequestedVectorToken))
             throw std::invalid_argument("helper physics input token");
         GridVector3 output{};
+        GetComparisonHelperInterpolationTrace().Add(4u,state.base_words[22u],elapsed,
+            {std::bit_cast<float>(state.base_words[10u]),std::bit_cast<float>(state.base_words[11u]),std::bit_cast<float>(state.base_words[12u])},
+            {std::bit_cast<float>(state.base_words[39u]),std::bit_cast<float>(state.base_words[40u]),std::bit_cast<float>(state.base_words[41u])},
+            {std::bit_cast<float>(state.base_words[1u]),std::bit_cast<float>(state.base_words[2u]),std::bit_cast<float>(state.base_words[3u])});
         (void)GridManager::ConstrainVelocity(state,output,requested_,*this);
+        GetComparisonHelperInterpolationTrace().Add(3u,state.base_words[22u],
+            std::bit_cast<float>(state.base_words[25u]),requested_,
+            ReadSlot10VectorFrom(Movement(state)),output);
         return output;
     }
     float ReadScalar(GridManagerState& state,std::uint32_t slot) override {
@@ -90,6 +99,9 @@ private:
     }
     GridVector3 ReadNormal(const GridManagerState& state) override { return ReadSlot10VectorFrom(Movement(state)); }
     GridVector3 ReadZeroVector() override { return {}; }
+    double Power(double base,double exponent) override {
+        return power_?power_(base,exponent):std::pow(base,exponent);
+    }
     float ReadSpeed(GridManagerState& state) override { return ReadScalar(state,0x64u); }
     std::uint32_t ApplyDirection(GridManagerState& state,const GridVector3& direction) override {
         auto image=Movement(state);
@@ -119,6 +131,7 @@ private:
         throw std::logic_error("physics does not use transform output");
     }
     const BehaviorVector3& requested_;
+    BehaviorHelperPhysics::Power power_;
 };
 }
 BehaviorVector3 BehaviorHelperPhysics::PredictPosition(const GridManagerState& state,float elapsed) {
@@ -131,14 +144,15 @@ BehaviorVector3 BehaviorHelperPhysics::PredictPosition(const GridManagerState& s
     Runtime runtime(unused);
     return GridManager::CalculatePosition(copy,elapsed,runtime);
 }
-void BehaviorHelperPhysics::Integrate(GridManagerState& state,const BehaviorVector3& requested,float elapsed) {
+void BehaviorHelperPhysics::Integrate(GridManagerState& state,const BehaviorVector3& requested,float elapsed,
+                                     Power power) {
     if(!std::isfinite(elapsed) || elapsed<0.f)
         throw std::invalid_argument("helper physics frame");
     for(const auto component:requested) if(!std::isfinite(component))
         throw std::invalid_argument("helper physics requested vector");
     if(state.base_words[0]!=0x842898u && state.base_words[0]!=0x842ae8u)
         throw std::invalid_argument("helper physics vtable");
-    Runtime runtime(requested);
+    Runtime runtime(requested,power);
     (void)GridManager::UpdatePositionAndVelocity(state,kRequestedVectorToken,elapsed,runtime);
 }
 }

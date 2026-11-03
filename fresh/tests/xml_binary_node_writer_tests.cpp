@@ -115,6 +115,10 @@ struct RecordMemory final : pal4::IXmlDocumentRecordRuntime,
 
     [[nodiscard]] std::uint32_t AllocateMemory(std::uint32_t) override { return 0u; }
     [[nodiscard]] std::uint32_t FreeMemory(std::uint32_t) override { return 0u; }
+    [[nodiscard]] std::uint32_t AllocateSharedNil() override { return 0u; }
+    [[nodiscard]] std::uint32_t FreeSharedNil(std::uint32_t) override { return 0u; }
+    void DocumentReferenceAdded() noexcept override {}
+    void DocumentReferenceRemoved() noexcept override {}
     void WriteWord(std::uint32_t address, std::uint32_t value) override {
         words[address] = value;
     }
@@ -137,7 +141,8 @@ struct RecordMemory final : pal4::IXmlDocumentRecordRuntime,
     void RemoveNode(std::uint32_t, std::uint32_t) override {}
     void GetFirstElement(std::uint32_t) override {}
     [[nodiscard]] std::uint32_t EmptyTextAddress() override { return 0u; }
-    [[nodiscard]] std::uint32_t CopyAttributeToTemporary(std::uint32_t) override {
+    [[nodiscard]] std::uint32_t CopyAttributeToTemporary(std::uint32_t,
+        std::span<std::uint32_t, 7>) override {
         return 0u;
     }
     void DestroyTemporaryAttribute(std::uint32_t) override {}
@@ -154,8 +159,9 @@ struct RecordMemory final : pal4::IXmlDocumentRecordRuntime,
     [[nodiscard]] std::uint32_t FindAttributeNode(
         std::uint32_t, std::string_view) override { return 0u; }
     [[nodiscard]] std::uint32_t InsertAttributeNode(
+        std::uint32_t, std::string_view, std::uint32_t) override { return 0u; }
+    [[nodiscard]] std::uint32_t FindAttributeNodeForAddition(
         std::uint32_t, std::string_view) override { return 0u; }
-    void AssignAttributeValue(std::uint32_t, std::uint32_t) override {}
     void DestroyEmbeddedAttribute(std::uint32_t) override {}
     [[nodiscard]] std::int32_t CompareAttributeRange(
         std::uint32_t, std::uint32_t) override { return 0; }

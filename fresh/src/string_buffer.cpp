@@ -647,8 +647,7 @@ bool StringBuffer::AllocateText(const std::uint32_t requested_length,
             state_ = {};
         } else {
             runtime.Free(data - 1u);
-            state_.data = 0u;
-            state_.capacity = 0u;
+            state_ = {};
         }
     } else {
         state_.capacity = 0u;

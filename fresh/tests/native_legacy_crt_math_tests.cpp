@@ -2,6 +2,7 @@
 #include <bit>
 #include <cstdint>
 #include <float.h>
+#include <cmath>
 #include <iostream>
 #include <stdexcept>
 
@@ -9,6 +10,15 @@ int main(){const auto saved=_controlfp(0,0);try{
     (void)_controlfp(_PC_24,_MCW_PC);
     pal4::NativeLegacyCrtMath::Initialize();
     const auto control=_controlfp(0,0);
+    const float ratio=std::bit_cast<float>(0x3f787460u);
+    const float legacy_power=static_cast<float>(pal4::NativeLegacyCrtMath::Pow(ratio,20.0));
+    const float modern_power=static_cast<float>(std::pow(static_cast<double>(ratio),20.0));
+    std::cout<<"captured constraint ratio bits="<<std::bit_cast<std::uint32_t>(ratio)
+             <<" legacy pow bits="<<std::bit_cast<std::uint32_t>(legacy_power)
+             <<" modern pow bits="<<std::bit_cast<std::uint32_t>(modern_power)<<'\n';
+    if(std::bit_cast<std::uint32_t>(legacy_power)!=1057798763u ||
+       std::bit_cast<std::uint32_t>(modern_power)!=1057798764u)
+        throw std::runtime_error("captured helper8 distinguishes legacy CRT power from modern power");
     // Actual original pair98 Run direction BF599E3C -> Face yaw43143828.
     const auto radians=pal4::NativeLegacyCrtMath::Acos(
         static_cast<double>(std::bit_cast<float>(0xbf599e3cu)));

@@ -1,4 +1,5 @@
 #include "pal4/scale_task.h"
+#include "support/effect_duration_x87_reference.h"
 
 #include <bit>
 #include <cmath>
@@ -77,9 +78,38 @@ pal4::ScaleTaskState State(bool result, bool rollback) {
     return state;
 }
 
+void CheckRandomizedDurationCases() {
+    for (const bool reroll : {false, true})
+        for (const float initial : {0.17f, 0.5f, 1.75f, 3.0f})
+            for (const float bias : {0.01f, 0.375f, 1.0f})
+                for (const int sample : {0, 3137, 12625, 13139, 16384, 32767, 2446, 9191}) {
+                    auto state = State(false, true);
+                    Put(state, 5u, initial);
+                    Put(state, 29u, bias);
+                    Runtime runtime;
+                    runtime.random = sample;
+                    if (reroll) {
+                        state.words[25u] = 0x2000u;
+                        state.words[26u] = 0x101u;  // rollback, reverse endpoint
+                        Put(state, 27u, 1.0f);
+                        Put(state, 28u, 1.0f);
+                        (void)pal4::ScaleTask::Update(state, 0.0f, runtime);
+                        Check(runtime.applied.size() == 2u, "reroll retains endpoint scale writes");
+                    } else {
+                        (void)pal4::ScaleTask::Start(state, runtime);
+                    }
+                    Check(runtime.random_calls == 1u, "duration samples exactly once");
+                    const auto expected = pal4::test::EffectDurationPc24(sample, initial, bias);
+                    Check(state.words[28u] == std::bit_cast<std::uint32_t>(expected),
+                          reroll ? "reroll duration matches original x87 PC24"
+                                 : "start duration matches original x87 PC24");
+                }
+}
+
 }  // namespace
 
 int main() {
+    CheckRandomizedDurationCases();
     Runtime runtime;
     auto constructed = State(false, false);
     constructed.words[25u] = 0xffffffffu;

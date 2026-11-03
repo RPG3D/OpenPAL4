@@ -1,4 +1,5 @@
 #include "pal4/object_random_movement_state.h"
+#include "support/random_movement_x87_reference.h"
 
 #include <bit>
 #include <cmath>
@@ -70,6 +71,38 @@ void TestProximityComparison() {
           "unordered threshold sets x87 C0 and returns false");
 }
 
+void TestPc24BranchesAndDirections() {
+    pal4::ObjectRandomMovementState state{};
+    Runtime boundary;
+    boundary.positions[0]={1.f,1.f,2.f};
+    SetFloat(state,47u,std::bit_cast<float>(0x401cc471u)); // sqrt(6) at PC24.
+#if defined(_MSC_VER) && defined(_M_IX86)
+    Check(std::bit_cast<std::uint32_t>(pal4::test::RandomMovementDistancePc24(
+              boundary.positions[0],{}))==0x401cc471u,
+          "original PC24 distance rounds to the radius boundary");
+#endif
+    Check(pal4::ObjectRandomMovementProximity::IsOutsideTargetRadius(state,boundary),
+          "PC24 radius equality enters the original outside branch");
+#if defined(_MSC_VER) && defined(_M_IX86)
+    std::uint32_t samples=1234567u;
+    for(unsigned n=0;n<128u;++n) {
+        pal4::BehaviorVector3 input{};
+        for(auto& value:input) {
+            samples=samples*1664525u+1013904223u;
+            value=static_cast<float>(static_cast<int>(samples>>16)-32768)*.03125f;
+        }
+        Runtime runtime;runtime.positions[0]=input;runtime.positions[1]=input;
+        state={};SetFloat(state,47u,0.f);
+        const pal4::BehaviorVector3 delta{-input[0],-input[1],-input[2]};
+        const auto wanted=pal4::test::RandomMovementNormalizePc24(delta);
+        (void)pal4::ObjectRandomMovementStateUpdate::Update(state,.017f,runtime);
+        for(unsigned axis=0;axis<3u;++axis)
+            Check(state.words[50u+axis]==std::bit_cast<std::uint32_t>(wanted[axis]),
+                  "outside direction matches original PC24 dot/sqrt/reciprocal");
+    }
+#endif
+}
+
 void TestOutsideDirection() {
     pal4::ObjectRandomMovementState state;
     Runtime runtime;
@@ -139,6 +172,7 @@ void TestTimerAndRandomHeading() {
 
 int main() {
     TestProximityComparison();
+    TestPc24BranchesAndDirections();
     TestOutsideDirection();
     TestZeroDirection();
     TestTimerAndRandomHeading();
@@ -147,5 +181,5 @@ int main() {
     Check(pal4::ObjectRandomMovementStateUpdate::Update(
               state, 0.0f, stub) == 0u,
           "default runtime links");
-    std::cout << "4 random movement state cases passed\n";
+    std::cout << "5 random movement state cases passed (128 original x87 direction samples on x86)\n";
 }

@@ -1,4 +1,4 @@
-# Public host source preview — 2026-11-03
+# Public host source preview — 2026-11-04
 
 Repository: https://github.com/betesla/OpenPAL4
 Project-owned code: GPL-3.0-or-later; third-party terms remain applicable.
@@ -41,3 +41,21 @@ supplied as cleared releases. No APK/NRO is part of this preview.
 The full Android tree's publicRelease variant has debugging disabled and no
 signing key. Only Groovy syntax was checked locally; actual Gradle configuration
 was blocked by a local loopback failure.
+
+## Latest source update
+
+This update includes shared XML ownership/error cleanup, movement precision,
+script player-position support, effect task handling and regression tests.
+New allowlisted headers/tests are included in the export manifest.
+
+Private pair330 comparison restores115 retained GOB roots /1003 XML nodes.
+CRT counts/categories/values match130728 calls per side, but ScaleTask target
+at ordinal110351 differs (original root19, rebuilt root18; H_065). Another151
+XML nodes remain under ownership investigation. These native Windows findings
+are progress context; proprietary native integration is outside this preview.
+Strict accepted gameplay remains global130201. Full game equivalence is pending.
+
+Fresh VS2022 x64 Debug configure/build passed on2026-11-04. CTest passed
+121/121 in11.55 seconds; release artifact audit tool passed6/6. Optional
+original-resource subbranches remain outside this asset-free validation.
+The MSVC getenv deprecation suppression is scoped to the diagnostic accessor.

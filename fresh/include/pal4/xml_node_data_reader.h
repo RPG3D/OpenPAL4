@@ -19,7 +19,8 @@ public:
     virtual void SetName(std::uint32_t node, std::uint32_t name,
                          std::uint32_t parent) = 0;
     [[nodiscard]] virtual std::uint32_t InitializeAttribute(
-        std::uint32_t type, std::uint32_t name) = 0;
+        std::uint32_t type, std::uint32_t name,
+        std::span<std::uint32_t, 7> storage) = 0;
     virtual void SetChar(std::uint32_t attribute, std::uint8_t value) = 0;
     virtual void SetInt(std::uint32_t attribute, std::int32_t value) = 0;
     virtual void SetFloatBits(std::uint32_t attribute,
@@ -32,6 +33,9 @@ public:
                               std::uint32_t attribute) = 0;
     virtual void DestroyAttribute(std::uint32_t attribute) = 0;
     [[nodiscard]] virtual std::uint32_t CreateNode() = 0;
+    // A failed recursive read still owns this child, even before SetName has
+    // attached it. Destruction also detaches an already attached child.
+    virtual void DestroyNode(std::uint32_t node) = 0;
 };
 
 class XmlNodeDataReader final {
@@ -54,7 +58,8 @@ public:
 
 // Bridges the reader's stream and temporary values to the reconstructed
 // 28-byte attribute and 60-byte document records. Both record runtimes must
-// address the same 32-bit memory space.
+// address the same local 32-bit memory space, including borrowed stack records.
+// Other memory representations implement IXmlNodeDataRuntime directly.
 class XmlNodeDataRecordAdapter final : public IXmlNodeDataRuntime {
 public:
     XmlNodeDataRecordAdapter(IXmlNodeDataInput& input,
@@ -71,7 +76,8 @@ public:
     void SetName(std::uint32_t node, std::uint32_t name,
                  std::uint32_t parent) override;
     [[nodiscard]] std::uint32_t InitializeAttribute(
-        std::uint32_t type, std::uint32_t name) override;
+        std::uint32_t type, std::uint32_t name,
+        std::span<std::uint32_t, 7> storage) override;
     void SetChar(std::uint32_t attribute, std::uint8_t value) override;
     void SetInt(std::uint32_t attribute, std::int32_t value) override;
     void SetFloatBits(std::uint32_t attribute, std::uint32_t bits) override;
@@ -81,6 +87,7 @@ public:
     void AddAttribute(std::uint32_t node, std::uint32_t attribute) override;
     void DestroyAttribute(std::uint32_t attribute) override;
     [[nodiscard]] std::uint32_t CreateNode() override;
+    void DestroyNode(std::uint32_t node) override;
 
 private:
     IXmlNodeDataInput& input_;

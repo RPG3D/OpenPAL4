@@ -1,4 +1,5 @@
 #include "pal4/pathway_grid.h"
+#include "movement_vector_math.h"
 
 #include <array>
 #include <bit>
@@ -28,13 +29,12 @@ PathwayPoint ReadPoint(IPathwayGridRuntime& runtime,
 }
 
 float Distance(const PathwayPoint& first, const PathwayPoint& second) {
-    double squared = 0.0;
+    std::array<float,3> difference{};
     for (std::uint32_t axis = 0u; axis < 3u; ++axis) {
-        const double delta = static_cast<double>(first.coordinates[axis]) -
-                             second.coordinates[axis];
-        squared += delta * delta;
+        difference[axis]=first.coordinates[axis]-second.coordinates[axis];
     }
-    return static_cast<float>(std::sqrt(squared));
+    // 65E050 builds a stored difference then calls40BF20 and FSQRT.
+    return movement_detail::Length(difference);
 }
 
 }  // namespace
@@ -42,27 +42,26 @@ float Distance(const PathwayPoint& first, const PathwayPoint& second) {
 float PathwayGrid::DistanceToSegment(
     PathwayGridState& state, const PathwayPoint& point,
     const PathwayPoint& first, const PathwayPoint& last) {
-    double projection = 0.0;
+    std::array<float,3> difference{},direction{};
     for (std::uint32_t axis = 0u; axis < 3u; ++axis) {
-        const float difference = point.coordinates[axis] -
-                                 first.coordinates[axis];
-        state.difference_bits[axis] = Bits(difference);
-        projection += static_cast<double>(Float(state.direction_bits[axis])) *
-                      difference;
+        difference[axis]=point.coordinates[axis]-first.coordinates[axis];
+        state.difference_bits[axis]=Bits(difference[axis]);
+        direction[axis]=Float(state.direction_bits[axis]);
     }
-    state.projection_bits = Bits(static_cast<float>(projection));
+    const float projection=movement_detail::Dot(direction,difference);
+    state.projection_bits=Bits(projection);
     PathwayPoint nearest;
-    if (projection <= 0.0) {
+    if (projection < 0.f) {
         nearest = first;
         state.projection_bits = 0u;
-    } else if (projection >= Float(state.segment_length_bits)) {
+    } else if (projection > Float(state.segment_length_bits)) {
         nearest = last;
         state.projection_bits = state.segment_length_bits;
     } else {
-        for (std::uint32_t axis = 0u; axis < 3u; ++axis)
-            nearest.coordinates[axis] = first.coordinates[axis] +
-                static_cast<float>(projection *
-                                   Float(state.direction_bits[axis]));
+        for (std::uint32_t axis = 0u; axis < 3u; ++axis) {
+            const volatile float offset=projection*direction[axis];
+            nearest.coordinates[axis]=first.coordinates[axis]+offset;
+        }
     }
     for (std::uint32_t axis = 0u; axis < 3u; ++axis)
         state.nearest_bits[axis] = Bits(nearest.coordinates[axis]);

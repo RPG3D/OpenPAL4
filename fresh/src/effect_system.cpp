@@ -888,6 +888,11 @@ std::uint32_t EffectSystem::LoadEffectFromFile(
     const auto initialized = runtime.InitializeSystem();
     if (runtime.ReadByte(initialized) == 0u) return 0u;
 
+    name = runtime.BeginLoadName(name);
+    struct NameScope {
+        IEffectSystemLoadRuntime& runtime;
+        ~NameScope() { runtime.EndLoadName(); }
+    } name_scope{runtime};
     const auto head = runtime.ReadWord(system + 4u);
     const auto cached = runtime.FindCached(system, name);
     if (cached != head) {
@@ -907,13 +912,17 @@ std::uint32_t EffectSystem::LoadEffectFromFile(
     std::uint32_t file = 0u;
     std::uint32_t xml = 0u;
     std::uint32_t adapter = 0u;
+    bool scripts_active = true;
+    const auto end_scripts = [&] {
+        runtime.ReleaseFilePath();
+        scripts_active = false;
+        runtime.EndScriptScope();
+    };
     try {
-        std::string path(runtime.EffectDirectory());
-        path.append(name);
-        path += ".eft";
+        const auto path = runtime.BuildFilePath(name);
         file = runtime.OpenFile(path);
         if (file == 0u) {
-            runtime.EndScriptScope();
+            end_scripts();
             return 0u;
         }
 
@@ -929,7 +938,7 @@ std::uint32_t EffectSystem::LoadEffectFromFile(
             }
             runtime.DestroyFileAdapter(adapter);
             adapter = 0u;
-            runtime.EndScriptScope();
+            end_scripts();
             return 0u;
         }
 
@@ -945,7 +954,7 @@ std::uint32_t EffectSystem::LoadEffectFromFile(
         if (!loaded) runtime.DestroyInstance(system, instance);
         runtime.DestroyFileAdapter(adapter);
         adapter = 0u;
-        runtime.EndScriptScope();
+        end_scripts();
         return loaded ? instance : 0u;
     } catch (...) {
         if (file != 0u) runtime.CloseFile(file);
@@ -954,7 +963,7 @@ std::uint32_t EffectSystem::LoadEffectFromFile(
             runtime.FreeXml(xml);
         }
         if (adapter != 0u) runtime.DestroyFileAdapter(adapter);
-        runtime.EndScriptScope();
+        if (scripts_active) end_scripts();
         throw;
     }
 }

@@ -267,6 +267,30 @@ void TestAlignedEqualSpeed() {
           "aligned equal speed uses offset-direction sign branch");
 }
 
+void TestCapturedPredictionOrder() {
+    // Pair314 frame2268 inputs, first projected-point fork at2269. IDA42BEAD/
+    //42BEB4 and42BEE6/42BEED scale forward by speed, then by prediction time.
+    const auto vector=[](std::array<std::uint32_t,3> bits){return std::bit_cast<BehaviorVector3>(bits);};
+    const auto scalar=[](std::uint32_t bits){return std::bit_cast<float>(bits);};
+    Runtime runtime;pal4::ObjectMovementState state{};BehaviorVector3 output{};
+    runtime.objects[1u]=Object{scalar(1124425960u),scalar(1112014848u),
+        vector({1167878315u,1152290793u,1152409860u}),{},
+        vector({1049630310u,0u,3212158803u}),vector({3212158803u,0u,3197113958u})};
+    runtime.objects[2u]=Object{scalar(1124425960u),scalar(1112014849u),
+        vector({1168009786u,1152031524u,1150024047u}),{},
+        vector({3198173632u,0u,1064510204u}),vector({1064510206u,2147483648u,1050689985u})};
+    for(auto& [id,object]:runtime.objects)
+        for(unsigned axis=0;axis<3u;++axis)object.offset[axis]=object.forward[axis]*object.speed;
+    const std::uint32_t ids[]{2u};
+    pal4::ObjectComplexCollision::Process(state,1u,output,3.f,ids,runtime);
+    Check(std::bit_cast<std::array<std::uint32_t,3>>(Cached(state,15u))==
+        std::array<std::uint32_t,3>{1167914531u,1152031524u,1151180193u},
+        "captured other prediction retains original speed-then-time rounding");
+    Check(std::bit_cast<std::array<std::uint32_t,3>>(Cached(state,18u))==
+        std::array<std::uint32_t,3>{1167963959u,1152290793u,1151241746u},
+        "captured self prediction matches original");
+}
+
 }  // namespace
 
 int main() {
@@ -278,4 +302,5 @@ int main() {
     TestZeroDistanceAndSignEquality();
     TestStrictTimeAndDiameter();
     TestAlignedEqualSpeed();
+    TestCapturedPredictionOrder();
 }

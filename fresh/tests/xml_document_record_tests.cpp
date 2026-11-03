@@ -21,6 +21,10 @@ void Check(bool condition, const char* message) {
 }
 
 struct Runtime final : pal4::IXmlDocumentRecordRuntime {
+    std::uint32_t AllocateSharedNil() override { return AllocateMemory(60u); }
+    std::uint32_t FreeSharedNil(std::uint32_t address) override { return FreeMemory(address); }
+    void DocumentReferenceAdded() noexcept override {}
+    void DocumentReferenceRemoved() noexcept override {}
     std::map<std::uint32_t, std::uint32_t> words;
     std::vector<std::uint32_t> word_reads;
     std::map<std::uint32_t, std::uint8_t> bytes;
@@ -131,7 +135,8 @@ struct Runtime final : pal4::IXmlDocumentRecordRuntime {
         first_element_requests.push_back(document);
     }
     std::uint32_t EmptyTextAddress() override { return 0xe000u; }
-    std::uint32_t CopyAttributeToTemporary(std::uint32_t source) override {
+    std::uint32_t CopyAttributeToTemporary(std::uint32_t source,
+        std::span<std::uint32_t, 7>) override {
         copied_attributes.push_back(source);
         return 0xd000u;
     }
@@ -181,15 +186,20 @@ struct Runtime final : pal4::IXmlDocumentRecordRuntime {
                    ? attribute_find_result
                    : words[tree + 4u];
     }
-    std::uint32_t InsertAttributeNode(std::uint32_t tree,
+    std::uint32_t FindAttributeNodeForAddition(std::uint32_t tree,
                                       std::string_view name) override {
+        return FindAttributeNode(tree, name);
+    }
+    std::uint32_t InsertAttributeNode(std::uint32_t tree,
+        std::string_view name, std::uint32_t source) override {
         attribute_events.push_back("insert");
         attribute_insertions.emplace_back(tree, name);
         if (fail_attribute_insert) throw std::bad_alloc{};
+        AssignAttributeValue(attribute_insert_result + 28u, source);
         return attribute_insert_result;
     }
     void AssignAttributeValue(std::uint32_t destination,
-                              std::uint32_t source) override {
+                              std::uint32_t source) {
         attribute_events.push_back("assign");
         attribute_assignments.emplace_back(destination, source);
         if (fail_attribute_assign) throw std::bad_alloc{};

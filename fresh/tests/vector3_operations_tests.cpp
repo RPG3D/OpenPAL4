@@ -66,6 +66,22 @@ void TestNormalizeAndProjection() {
           "normalize by supplied length");
 }
 
+void TestCapturedProjectionPrecision() {
+    // Pair315 first post-prediction fork at2289, helper38/39 separation and
+    // helper38 forward. Original42B7E0 rounds each X,Z,Y dot operation in PC24.
+    const auto vector=[](std::array<std::uint32_t,3> bits){return std::bit_cast<BehaviorVector3>(bits);};
+    BehaviorVector3 value=vector({3260401024u,1105328384u,1132560032u});
+    const auto axis=vector({1051128771u,0u,3211919865u});
+    BehaviorVector3 output{};
+    const auto expected=std::array<std::uint32_t,3>{1107315792u,1105328384u,1093731440u};
+    Vector3Operations::SubtractProjection(value,output,axis);
+    Check(std::bit_cast<std::array<std::uint32_t,3>>(output)==expected,
+        "captured overlap projection retains original PC24 X,Z,Y arithmetic");
+    Vector3Operations::SubtractProjection(value,value,axis);
+    Check(std::bit_cast<std::array<std::uint32_t,3>>(value)==expected,
+        "captured overlap projection permits in-place output");
+}
+
 void TestInPlaceAndAlias() {
     BehaviorVector3 value{1.0f, 2.0f, 3.0f};
     BehaviorVector3 output{};
@@ -111,6 +127,7 @@ void TestRandomClamp() {
 int main() {
     TestArithmetic();
     TestNormalizeAndProjection();
+    TestCapturedProjectionPrecision();
     TestInPlaceAndAlias();
     TestRandomClamp();
 }

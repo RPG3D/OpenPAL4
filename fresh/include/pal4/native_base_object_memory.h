@@ -38,6 +38,7 @@ public:
     [[nodiscard]] std::uint8_t ReadByte(std::uint32_t address) const;
     void WriteDword(std::uint32_t address, std::uint32_t value) override;
     void WriteByte(std::uint32_t address, std::uint8_t value) override;
+    [[nodiscard]] IStringBufferStorageRuntime& SharedRecordStorage() noexcept override;
     [[nodiscard]] PathRuntime& Path() noexcept { return path_; }
     [[nodiscard]] std::size_t OutstandingAllocations() const noexcept {
         return allocations_.size();

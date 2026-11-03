@@ -71,9 +71,29 @@ struct LoadRuntime final : pal4::IEffectSystemLoadRuntime {
     bool load_ok = true;
     bool throw_on_insert = false;
     bool throw_on_load = false;
+    bool name_live{},path_live{},scripts_live{};
+    bool throw_on_path{},throw_on_begin_scripts{};
+    std::string path_storage;
     std::map<std::uint32_t, std::uint32_t> words{
         {kSystem + 4u, kHead}, {kCached + 28u, kXml}};
     std::vector<std::string> calls;
+
+    ~LoadRuntime() override {
+        Check(!name_live && !path_live && !scripts_live,"all effect load scopes released");
+    }
+    std::string_view BeginLoadName(std::string_view name) override {
+        Check(!name_live,"load name begins once");name_live=true;return name;
+    }
+    void EndLoadName() noexcept override {
+        Check(name_live && !path_live && !scripts_live,"name survives path and script scopes");name_live=false;
+    }
+    std::string_view BuildFilePath(std::string_view name) override {
+        Check(name_live && scripts_live && !path_live,"path constructed within script/name scope");
+        path_live=true;calls.push_back("directory");
+        if(throw_on_path)throw std::runtime_error("path creation failed");
+        path_storage="effects/";path_storage.append(name);path_storage+=".eft";return path_storage;
+    }
+    void ReleaseFilePath() noexcept override {path_storage.clear();path_live=false;}
 
     std::uint32_t InitializeSystem() override {
         calls.push_back("initialize");
@@ -88,17 +108,20 @@ struct LoadRuntime final : pal4::IEffectSystemLoadRuntime {
     }
     std::uint32_t FindCached(std::uint32_t system,
                              std::string_view name) override {
+        Check(name_live,"cache lookup retains the original name scope");
         Check(system == kSystem && name == "spark",
               "effect cache lookup uses the requested name");
         calls.push_back("find");
         return cached ? kCached : kHead;
     }
     std::uint32_t CreateInstance() override {
+        Check(name_live && (cached || path_live),"name and miss path survive Dialog creation");
         calls.push_back("create instance");
         return kInstance;
     }
     bool LoadInstance(std::uint32_t instance,
                       std::uint32_t xml) override {
+        Check(name_live && (cached || path_live),"load retains name and miss path");
         Check(instance == kInstance && xml == kXml,
               "effect instance loads cached or parsed XML");
         calls.push_back("load instance");
@@ -111,11 +134,14 @@ struct LoadRuntime final : pal4::IEffectSystemLoadRuntime {
               "failed instance is destroyed in its effect system");
         calls.push_back("destroy instance");
     }
-    void BeginScriptScope() override { calls.push_back("begin scripts"); }
-    void EndScriptScope() override { calls.push_back("end scripts"); }
-    std::string_view EffectDirectory() override {
-        calls.push_back("directory");
-        return "effects/";
+    void BeginScriptScope() override {
+        calls.push_back("begin scripts");
+        if(throw_on_begin_scripts)throw std::runtime_error("script scope failed");
+        scripts_live=true;
+    }
+    void EndScriptScope() override {
+        Check(scripts_live && !path_live && name_live,"path released before script scope and retained name");
+        scripts_live=false;calls.push_back("end scripts");
     }
     std::uint32_t OpenFile(std::string_view path) override {
         Check(path == "effects/spark.eft", "effect path appends .eft");
@@ -143,6 +169,7 @@ struct LoadRuntime final : pal4::IEffectSystemLoadRuntime {
         return parse_ok;
     }
     void DestroyFileAdapter(std::uint32_t adapter) override {
+        Check(name_live && path_live && scripts_live,"adapter released before path/script/name");
         Check(adapter == kAdapter, "file adapter is reset");
         calls.push_back("destroy adapter");
     }
@@ -895,6 +922,22 @@ void TestInstanceLoadExceptionCleanup() {
     }
 }
 
+void TestTextScopeExceptionCleanup() {
+    for(const bool begin_failure : {false,true}) {
+        LoadRuntime runtime;
+        runtime.throw_on_begin_scripts=begin_failure;
+        runtime.throw_on_path=!begin_failure;
+        bool threw{};
+        try {(void)pal4::EffectSystem::LoadEffectFromFile(LoadRuntime::kSystem,"spark",runtime);}
+        catch(const std::runtime_error&){threw=true;}
+        Check(threw && !runtime.name_live && !runtime.path_live && !runtime.scripts_live,
+            "partial path or script begin failure unwinds acquired scopes");
+        Check(runtime.calls==(begin_failure?std::vector<std::string>{"initialize","find","begin scripts"}:
+            std::vector<std::string>{"initialize","find","begin scripts","directory","end scripts"}),
+            "failed script begin is not ended; partial path is released before script end");
+    }
+}
+
 void TestTreeLowerBounds() {
     TreeRuntime tree;
     tree.texts[TreeRuntime::kKey] = "m";
@@ -1373,6 +1416,7 @@ int main() {
     TestLoadCachedInstance();
     TestLoadFromFile();
     TestInstanceLoadExceptionCleanup();
+    TestTextScopeExceptionCleanup();
     TestInsertionFailureCleanup();
     TestTreeLowerBounds();
     TestInitializeLayout();

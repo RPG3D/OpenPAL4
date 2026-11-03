@@ -99,6 +99,7 @@ public:
         return scene_entry_.Count();
     }
     [[nodiscard]] NativeNpcManagerOwner& Manager() noexcept { return manager_; }
+    [[nodiscard]] const NativeNpcManagerOwner& Manager() const noexcept { return manager_; }
     [[nodiscard]] std::size_t Count() const noexcept { return objects_.size(); }
 
 private:

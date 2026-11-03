@@ -40,6 +40,9 @@ public:
     [[nodiscard]] virtual float CurrentY() {
         throw std::logic_error("PAL4 current player Y is unavailable");
     }
+    [[nodiscard]] virtual float CurrentZ() {
+        throw std::logic_error("PAL4 current player Z is unavailable");
+    }
     [[nodiscard]] virtual std::uint32_t PlayerManager() = 0;
     [[nodiscard]] virtual std::uint32_t PlayerByIndex(
         std::uint32_t manager, std::int32_t index) = 0;

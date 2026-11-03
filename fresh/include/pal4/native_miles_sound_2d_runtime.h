@@ -22,10 +22,12 @@ class NativeMilesSound2dRuntime final : public IScriptSound2dRuntime, public INa
 public:
     using SoundNameResolver =
         std::function<std::string_view(std::uint32_t)>;
+    enum class DriverRequirement { Open, Deferred };
 
     NativeMilesSound2dRuntime(std::filesystem::path game_root,
                               NativeMilesDigitalDriver& driver,
-                              SoundNameResolver sound_name = {});
+                              SoundNameResolver sound_name = {},
+                              DriverRequirement requirement = DriverRequirement::Open);
     ~NativeMilesSound2dRuntime() override;
     NativeMilesSound2dRuntime(const NativeMilesSound2dRuntime&) = delete;
     NativeMilesSound2dRuntime& operator=(const NativeMilesSound2dRuntime&) = delete;

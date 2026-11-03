@@ -12,6 +12,19 @@ namespace pal4 {
 // __FILE__ labels. Nesting follows native service calls and stays thread-local;
 // neither entering nor leaving a scope touches the public CRT.
 inline thread_local const char* native_crt_observation_site{};
+inline thread_local std::uintptr_t native_crt_observation_owner{};
+// Process-local provenance only. Nesting, exceptions and helper threads must
+// not leak task identity into later draws; entering this scope never samples.
+class NativeCrtObservationOwnerScope final {
+public:
+    explicit NativeCrtObservationOwnerScope(std::uintptr_t owner) noexcept
+        :previous_(native_crt_observation_owner) {native_crt_observation_owner=owner;}
+    ~NativeCrtObservationOwnerScope(){native_crt_observation_owner=previous_;}
+    NativeCrtObservationOwnerScope(const NativeCrtObservationOwnerScope&)=delete;
+    NativeCrtObservationOwnerScope& operator=(const NativeCrtObservationOwnerScope&)=delete;
+private:
+    std::uintptr_t previous_{};
+};
 class NativeCrtObservationScope final {
 public:
     explicit NativeCrtObservationScope(const char* source) noexcept
@@ -38,7 +51,7 @@ inline int NativeCrtRandom(const char* source) {
     const auto value=std::rand();
     auto& trace=GetComparisonCrtTrace();
     if(native_crt_observation_site)source=native_crt_observation_site;
-    if(trace.Enabled())trace.Add({0u,static_cast<std::uint32_t>(value),NativeCrtRandomThread(),0u,0u,0u,source});
+    if(trace.Enabled())trace.Add({0u,static_cast<std::uint32_t>(value),NativeCrtRandomThread(),0u,0u,0u,source,native_crt_observation_owner});
     return value;
 }
 inline void NativeCrtSeedRandom(unsigned seed,const char* source) {

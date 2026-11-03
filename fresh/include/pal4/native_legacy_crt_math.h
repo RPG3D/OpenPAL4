@@ -7,5 +7,6 @@ public:
     [[nodiscard]] static double Asin(double);
     [[nodiscard]] static double Atan2(double y,double x);
     [[nodiscard]] static double Acos(double);
+    [[nodiscard]] static double Pow(double base,double exponent);
 };
 }

@@ -101,17 +101,23 @@ bool PathwayGrid::Initialize(
         const auto& current = points[index == points.size() ? 0u : index];
         const auto& previous = points[index - 1u];
         std::array<float, 3u> delta{};
-        double squared = 0.0;
         for (std::uint32_t axis = 0u; axis < 3u; ++axis) {
             delta[axis] = current.coordinates[axis] -
                           previous.coordinates[axis];
-            squared += static_cast<double>(delta[axis]) * delta[axis];
         }
+        // 65DCD1..65DCF4 inline X,Y,Z at game PC24; this differs from
+        // CalculateDotProduct40BF20's Z,Y,X association.
+        const volatile float x_squared=delta[0]*delta[0];
+        const volatile float y_squared=delta[1]*delta[1];
+        const volatile float xy=x_squared+y_squared;
+        const volatile float z_squared=delta[2]*delta[2];
+        const volatile float squared=xy+z_squared;
         const float length = static_cast<float>(std::sqrt(squared));
         runtime.WriteWord(state.lengths + 4u * index, Bits(length));
+        const volatile float inverse=1.f/length;
         for (std::uint32_t axis = 0u; axis < 3u; ++axis)
             runtime.WriteWord(state.directions + 12u * index + 4u * axis,
-                              Bits(length == 0.0f ? 0.0f : delta[axis] / length));
+                              Bits(delta[axis]*inverse));
         total += length;
     }
     state.total_length_bits = Bits(total);

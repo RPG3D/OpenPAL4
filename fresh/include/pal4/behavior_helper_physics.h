@@ -8,10 +8,13 @@ namespace pal4 {
 // supply the requested vector; this core does not choose a route or bind actors.
 class BehaviorHelperPhysics final {
 public:
+    using Power=double(*)(double,double);
     // Slot6C /65F7A0: const velocity extrapolation for path correction.
     [[nodiscard]] static BehaviorVector3 PredictPosition(const GridManagerState& state,float elapsed);
     // Finite nonnegative elapsed time and finite requested components required.
     // The BA-byte image uses original numeric IDs, never host addresses.
-    static void Integrate(GridManagerState& state,const BehaviorVector3& requested,float elapsed);
+    // Platforms may supply their verified public CRT power implementation.
+    static void Integrate(GridManagerState& state,const BehaviorVector3& requested,float elapsed,
+                          Power power=nullptr);
 };
 }

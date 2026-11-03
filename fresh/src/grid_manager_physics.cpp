@@ -1,4 +1,5 @@
 #include "pal4/grid_manager.h"
+#include "movement_vector_math.h"
 
 #include <bit>
 #include <cmath>
@@ -21,12 +22,6 @@ void WriteTriple(GridManagerState& state, const std::uint32_t first_word,
             std::bit_cast<std::uint32_t>(value[axis]);
 }
 
-double Dot(const GridVector3& first, const GridVector3& second) {
-    return static_cast<double>(first[0]) * second[0] +
-           static_cast<double>(first[1]) * second[1] +
-           static_cast<double>(first[2]) * second[2];
-}
-
 }  // namespace
 
 std::uint32_t GridManager::UpdatePhysics(
@@ -46,23 +41,25 @@ std::uint32_t GridManager::UpdatePhysics(
     for (std::uint32_t axis = 0u; axis < 3u; ++axis)
         normal_delta[axis] = previous_normal[axis] -
                              current_normal[axis];
-    const double distance = std::sqrt(Dot(displacement, displacement));
+    const float distance=movement_detail::Length(displacement);
+    const volatile float inverse_distance=1.f/distance;
     GridVector3 direction{};
-    if (distance > 0.0) {
-        for (std::uint32_t axis = 0u; axis < 3u; ++axis)
-            direction[axis] = static_cast<float>(
-                normal_delta[axis] / distance);
-    }
+    for (std::uint32_t axis = 0u; axis < 3u; ++axis)
+        direction[axis] = normal_delta[axis]*inverse_distance;
     const auto projection_normal = runtime.ReadNormal(state);
-    const double projection = Dot(direction, projection_normal);
+    const float projection=movement_detail::Dot(direction,projection_normal);
     GridVector3 tangent{};
     for (std::uint32_t axis = 0u; axis < 3u; ++axis)
-        tangent[axis] = static_cast<float>(
-            direction[axis] - projection * projection_normal[axis]);
+    {
+        const volatile float projected=projection*projection_normal[axis];
+        tangent[axis]=direction[axis]-projected;
+    }
     const auto orientation = runtime.ReadOrientation(state);
-    const double sign = Dot(tangent, orientation) >= 0.0 ? -1.0 : 1.0;
-    const float signed_length = static_cast<float>(
-        sign * std::sqrt(Dot(tangent, tangent)));
+    // 65F5A0 associates Y,Z,X in both the sign dot and tangent norm.
+    const GridVector3 ordered_tangent{tangent[0],tangent[2],tangent[1]};
+    const GridVector3 ordered_orientation{orientation[0],orientation[2],orientation[1]};
+    const float sign=movement_detail::Dot(ordered_tangent,ordered_orientation)>=0.f?-1.f:1.f;
+    const float signed_length=sign*movement_detail::Length(ordered_tangent);
     state.base_words[28] = std::bit_cast<std::uint32_t>(signed_length);
     const float old_smoothed = std::bit_cast<float>(state.base_words[38]);
     const float factor = ClampValue(delta_time * 4.0f, 0.0f, 1.0f);

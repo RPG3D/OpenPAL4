@@ -23,7 +23,10 @@ void BaseObjectOrientation::Update(
         0.0 * static_cast<double>(normalized.x) +
         static_cast<double>(normalized.z));
     if (normalized.x < 0.0f) {
-        radians = 6.283185307179586 - radians;
+        //444164..444178: FCHS/FADD(double2pi) executes under PC24 before
+        // multiplying the degree coefficient. Preserve that rounding boundary.
+        const volatile float mirrored=static_cast<float>(6.283185307179586-radians);
+        radians=mirrored;
     }
     pose.y = static_cast<float>(
         static_cast<double>(57.295780181884766f) * radians);

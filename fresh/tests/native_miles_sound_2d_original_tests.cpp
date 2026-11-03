@@ -19,8 +19,21 @@ int main(int argc, char** argv) {
     try {
         Check(argc == 2, "provide original PAL4 installation path");
         pal4::NativeMilesDigitalDriver driver(argv[1]);
+        bool closed_rejected=false;
+        try {pal4::NativeMilesSound2dRuntime requires_open(argv[1],driver);}
+        catch(const std::invalid_argument&){closed_rejected=true;}
+        Check(closed_rejected,"ordinary sound owner still requires an opened driver");
+        pal4::NativeMilesSound2dRuntime prepared(argv[1],driver,{},
+            pal4::NativeMilesSound2dRuntime::DriverRequirement::Deferred);
+        Check(!driver.Handle() && prepared.AudioManager()==0u &&
+                  prepared.PlayNamedSound("WJ001.wav",1)==0u && !driver.Handle() &&
+                  prepared.ActiveCount()==0u && !prepared.LastError().empty(),
+              "prepared sound owner cannot start audio or allocate a sample before initialization");
         Check(driver.Open(), "open original Miles digital driver");
         driver.SetMasterVolume(0.0f);
+        Check(prepared.PlayNamedSound("WJ001.wav",1)!=0u,
+              "same prepared owner uses the explicitly opened shared driver");
+        prepared.StopAll();
         std::string name = "WJ001";
         const auto source = reinterpret_cast<std::uint32_t>(&name);
         pal4::NativeMilesSound2dRuntime sound(argv[1], driver,

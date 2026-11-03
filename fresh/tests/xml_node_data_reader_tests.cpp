@@ -43,6 +43,8 @@ struct Runtime final : pal4::IXmlNodeDataRuntime {
     std::uint32_t next_node{0x20000u};
     bool fail_add{};
     bool fail_read{};
+    bool check_binary_name_lifetime{};
+    std::map<std::uint32_t, std::uint32_t> attribute_names;
 
     void Word(const std::int32_t value) {
         for (unsigned shift = 0; shift < 32; shift += 8)
@@ -104,9 +106,11 @@ struct Runtime final : pal4::IXmlNodeDataRuntime {
         events.emplace_back("name");
     }
     [[nodiscard]] std::uint32_t InitializeAttribute(
-        const std::uint32_t type, const std::uint32_t name) override {
+        const std::uint32_t type, const std::uint32_t name,
+        std::span<std::uint32_t, 7>) override {
         const auto address = next_attribute++;
         live_attributes[address] = AttributeValue{type, String(name)};
+        attribute_names[address] = name;
         events.emplace_back("attribute-init");
         return address;
     }
@@ -139,6 +143,9 @@ struct Runtime final : pal4::IXmlNodeDataRuntime {
     }
     void AddAttribute(const std::uint32_t node,
                       const std::uint32_t attribute) override {
+        if (check_binary_name_lifetime)
+            Check(!allocations.contains(attribute_names.at(attribute)),
+                  "binary attribute name buffer is freed before value insertion (IDA5F78BC)");
         if (fail_add) throw std::runtime_error("attribute insertion failed");
         node_attributes[node].push_back(live_attributes.at(attribute));
         events.emplace_back("attribute-add");
@@ -146,11 +153,16 @@ struct Runtime final : pal4::IXmlNodeDataRuntime {
     void DestroyAttribute(const std::uint32_t attribute) override {
         Check(live_attributes.erase(attribute) == 1u,
               "attribute destroyed once");
+        attribute_names.erase(attribute);
         events.emplace_back("attribute-destroy");
     }
     [[nodiscard]] std::uint32_t CreateNode() override {
         events.emplace_back("child-create");
         return next_node++;
+    }
+    void DestroyNode(std::uint32_t node) override {
+        node_names.erase(node);node_parents.erase(node);
+        events.emplace_back("child-destroy");
     }
 };
 
@@ -273,6 +285,7 @@ struct FileRuntime final : pal4::IXmlDocumentFileRuntime {
 
 void TestAllTypesAndRecursiveChildren() {
     Runtime runtime;
+    runtime.check_binary_name_lifetime = true;
     runtime.NamedNode("root");
     runtime.Word(7);
     runtime.Word(0); runtime.Word(1); runtime.Text("c"); runtime.Byte(0x80u);
@@ -355,8 +368,9 @@ void TestFailureCleanup() {
     catch (const std::runtime_error&) { caught = true; }
     Check(caught && failed_insert.allocations.empty() &&
               failed_insert.live_attributes.empty() &&
-              failed_insert.events.back() == "free",
-          "insertion exception destroys attribute and frees name");
+              failed_insert.events == std::vector<std::string>{
+                  "name", "allocate", "attribute-init", "free", "attribute-destroy"},
+          "insertion exception destroys attribute after its name buffer was already freed");
 
     Runtime failed_read;
     failed_read.Word(2); failed_read.Text("ab");

@@ -57,6 +57,7 @@ public:
     void BindNpcs(INativeNpcPositionServices* services) noexcept { npcs_=services; }
 
     [[nodiscard]] float CurrentY() override;
+    [[nodiscard]] float CurrentZ() override;
     std::uint32_t PlayerManager() override;
     std::uint32_t PlayerByIndex(std::uint32_t manager,
                                 std::int32_t index) override;

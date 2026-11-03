@@ -113,12 +113,20 @@ bool Vector3Operations::Equals(const BehaviorVector3& first,
 BehaviorVector3& Vector3Operations::SubtractProjection(
     const BehaviorVector3& value, BehaviorVector3& output,
     const BehaviorVector3& axis) {
-    const double dot = static_cast<double>(axis[0]) * value[0] +
-                       static_cast<double>(value[2]) * axis[2] +
-                       static_cast<double>(value[1]) * axis[1];
-    const float x = static_cast<float>(value[0] - dot * axis[0]);
-    const float y = static_cast<float>(value[1] - dot * axis[1]);
-    const float z = static_cast<float>(value[2] - dot * axis[2]);
+    //42B7E0 uses its own X,Z,Y dot association under PC24, followed by
+    // separately rounded projection products and subtraction. It does not
+    // normalize the axis or share CalculateDotProduct40BF20's Z,Y,X order.
+    const volatile float x_product=axis[0]*value[0];
+    const volatile float z_product=value[2]*axis[2];
+    const volatile float xz=x_product+z_product;
+    const volatile float y_product=value[1]*axis[1];
+    const volatile float dot=xz+y_product;
+    const volatile float projected_x=dot*axis[0];
+    const volatile float projected_y=dot*axis[1];
+    const volatile float projected_z=dot*axis[2];
+    const float x=value[0]-projected_x;
+    const float y=value[1]-projected_y;
+    const float z=value[2]-projected_z;
     output = {x, y, z};
     return output;
 }

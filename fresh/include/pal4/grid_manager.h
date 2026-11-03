@@ -46,6 +46,7 @@ public:
     [[nodiscard]] virtual GridVector3 ReadNormal(
         const GridManagerState& state) = 0;
     [[nodiscard]] virtual GridVector3 ReadZeroVector() = 0;
+    [[nodiscard]] virtual double Power(double base,double exponent) = 0;
 };
 
 class IGridManagerMotionRuntime {

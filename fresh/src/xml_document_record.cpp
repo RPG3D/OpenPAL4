@@ -2,6 +2,7 @@
 #include "pal4/range_no_op_callback.h"
 
 #include <new>
+#include <array>
 #include <stdexcept>
 #include <string>
 
@@ -24,8 +25,9 @@ void CopyMembers(const std::uint32_t destination, const std::uint32_t source,
         const auto head = runtime.ReadWord(source + 24u);
         auto node = runtime.ReadWord(head);
         while (node != head) {
+            std::array<std::uint32_t, 7> storage{};
             const auto temporary =
-                runtime.CopyAttributeToTemporary(node + 28u);
+                runtime.CopyAttributeToTemporary(node + 28u, storage);
             try {
                 (void)XmlDocumentRecord::AddAttribute(destination, temporary,
                                                        runtime);
@@ -439,11 +441,12 @@ std::uint32_t XmlDocumentRecord::Destroy(
     runtime.WriteWord(document + 24u, 0u);
     runtime.WriteWord(document + 32u, 0u);
     --globals.construction_count;
+    runtime.DocumentReferenceRemoved();
     if (globals.construction_count != 0u) return globals.construction_count;
 
     const auto nil = globals.nil_node;
     globals.nil_node = 0u;
-    if (nil != 0u) return runtime.FreeMemory(nil);
+    if (nil != 0u) return runtime.FreeSharedNil(nil);
     return 0u;
 }
 
@@ -704,9 +707,8 @@ std::uint8_t XmlDocumentRecord::AddAttribute(
 
     const auto head = runtime.ReadWord(node + 24u);
     const auto tree = node + 20u;
-    if (runtime.FindAttributeNode(tree, name) == head) {
-        const auto inserted = runtime.InsertAttributeNode(tree, name);
-        runtime.AssignAttributeValue(inserted + 28u, attribute);
+    if (runtime.FindAttributeNodeForAddition(tree, name) == head) {
+        (void)runtime.InsertAttributeNode(tree, name, attribute);
         runtime.WriteWord(node + 52u,
                           runtime.ReadWord(node + 52u) + 1u);
     }
@@ -978,24 +980,29 @@ std::uint32_t XmlDocumentRecord::DeleteAttributeSubtree(
 std::uint32_t XmlDocumentRecord::CreateAttributeTree(
     const std::uint32_t tree, XmlDocumentTreeGlobals& globals,
     IXmlDocumentRecordRuntime& runtime) {
-    const auto proposed_nil = AllocateAttributeTreeNode(0u, 1u, runtime);
-    if (globals.nil_node == 0u) {
+    const auto proposed_nil = runtime.AllocateSharedNil();
+    if (proposed_nil == 0u) throw std::bad_alloc{};
+    runtime.WriteWord(proposed_nil + 4u, 0u);
+    runtime.WriteWord(proposed_nil + 56u, 1u);
+    const bool first_reference = globals.nil_node == 0u;
+    if (first_reference) {
         globals.nil_node = proposed_nil;
         runtime.WriteWord(proposed_nil, 0u);
         runtime.WriteWord(proposed_nil + 8u, 0u);
-    } else {
-        (void)runtime.FreeMemory(proposed_nil);
     }
     ++globals.construction_count;
+    runtime.DocumentReferenceAdded();
+    if (!first_reference) (void)runtime.FreeSharedNil(proposed_nil);
 
     std::uint32_t head = 0u;
     try {
         head = AllocateAttributeTreeNode(globals.nil_node, 0u, runtime);
     } catch (...) {
+        runtime.DocumentReferenceRemoved();
         if (--globals.construction_count == 0u) {
             const auto nil = globals.nil_node;
             globals.nil_node = 0u;
-            (void)runtime.FreeMemory(nil);
+            (void)runtime.FreeSharedNil(nil);
         }
         throw;
     }

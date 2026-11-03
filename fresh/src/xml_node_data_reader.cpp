@@ -3,6 +3,7 @@
 #include "xml_data_scoped.h"
 
 #include <limits>
+#include <optional>
 #include <stdexcept>
 #include <vector>
 
@@ -11,6 +12,13 @@ namespace {
 
 using detail::XmlAttribute;
 using detail::XmlTemporary;
+
+std::uint32_t BorrowedAddress(const void* storage) {
+    const auto address = reinterpret_cast<std::uintptr_t>(storage);
+    if (address > std::numeric_limits<std::uint32_t>::max())
+        throw std::logic_error("XML record adapter requires local 32-bit storage");
+    return static_cast<std::uint32_t>(address);
+}
 
 void ReadAttributeValue(const std::uint32_t type,
                         const std::uint32_t attribute,
@@ -74,19 +82,23 @@ std::uint8_t XmlNodeDataReader::Read(const std::uint32_t parent,
         const auto length = runtime.ReadInt32();
         if (length < 0 || length == std::numeric_limits<std::int32_t>::max())
             throw std::length_error("invalid XML attribute name length");
-        XmlTemporary name(runtime, static_cast<std::uint32_t>(length) + 1u);
-        runtime.ReadBytes(name.Address(), static_cast<std::uint32_t>(length));
-        runtime.WriteByte(name.Address() + static_cast<std::uint32_t>(length), 0u);
-        XmlAttribute attribute(runtime, type, name.Address());
-        ReadAttributeValue(type, attribute.Address(), runtime);
-        runtime.AddAttribute(node, attribute.Address());
+        std::optional<XmlAttribute> attribute;
+        {
+            XmlTemporary name(runtime, static_cast<std::uint32_t>(length) + 1u);
+            runtime.ReadBytes(name.Address(), static_cast<std::uint32_t>(length));
+            runtime.WriteByte(name.Address() + static_cast<std::uint32_t>(length), 0u);
+            attribute.emplace(runtime, type, name.Address());
+        } // IDA5F78BC frees the name before reading/setting the value.
+        ReadAttributeValue(type, attribute->Address(), runtime);
+        runtime.AddAttribute(node, attribute->Address());
     }
 
     const auto child_count = runtime.ReadInt32();
     for (std::int32_t index = 0; index < child_count; ++index) {
         const auto child = runtime.CreateNode();
         if (child == 0u) throw std::bad_alloc{};
-        (void)Read(node, child, runtime);
+        try {(void)Read(node, child, runtime);}
+        catch (...) {runtime.DestroyNode(child);throw;}
     }
     return 1u;
 }
@@ -147,37 +159,31 @@ void XmlNodeDataRecordAdapter::SetName(const std::uint32_t node,
 }
 
 std::uint32_t XmlNodeDataRecordAdapter::InitializeAttribute(
-    const std::uint32_t type, const std::uint32_t name) {
-    const auto attribute = attributes_.AllocateMemory(28u);
-    if (attribute == 0u) throw std::bad_alloc{};
+    const std::uint32_t type, const std::uint32_t name,
+    std::span<std::uint32_t, 7> storage) {
+    const auto attribute = BorrowedAddress(storage.data());
     try {
         return XmlAttributeRecord::InitializeWithValue(
             attribute, type, name, attributes_);
     } catch (...) {
-        (void)attributes_.FreeBlock(attribute);
+        (void)XmlAttributeRecord::Destroy(attribute, attributes_);
         throw;
     }
 }
 
 void XmlNodeDataRecordAdapter::SetChar(const std::uint32_t attribute,
                                         const std::uint8_t value) {
-    XmlTemporary source(*this, 1u);
-    attributes_.WriteByte(source.Address(), value);
-    (void)XmlAttributeRecord::SetChar(attribute, source.Address(), attributes_);
+    (void)XmlAttributeRecord::SetChar(attribute, BorrowedAddress(&value), attributes_);
 }
 
 void XmlNodeDataRecordAdapter::SetInt(const std::uint32_t attribute,
                                        const std::int32_t value) {
-    XmlTemporary source(*this, 4u);
-    attributes_.WriteWord(source.Address(), static_cast<std::uint32_t>(value));
-    (void)XmlAttributeRecord::SetInt(attribute, source.Address(), attributes_);
+    (void)XmlAttributeRecord::SetInt(attribute, BorrowedAddress(&value), attributes_);
 }
 
 void XmlNodeDataRecordAdapter::SetFloatBits(const std::uint32_t attribute,
                                               const std::uint32_t bits) {
-    XmlTemporary source(*this, 4u);
-    attributes_.WriteWord(source.Address(), bits);
-    (void)XmlAttributeRecord::SetFloat(attribute, source.Address(), attributes_);
+    (void)XmlAttributeRecord::SetFloat(attribute, BorrowedAddress(&bits), attributes_);
 }
 
 void XmlNodeDataRecordAdapter::SetString(const std::uint32_t attribute,
@@ -186,18 +192,15 @@ void XmlNodeDataRecordAdapter::SetString(const std::uint32_t attribute,
         (void)XmlAttributeRecord::SetString(attribute, text, attributes_);
         return;
     }
-    XmlTemporary empty(*this, 1u);
-    WriteByte(empty.Address(), 0u);
-    (void)XmlAttributeRecord::SetString(attribute, empty.Address(), attributes_);
+    static constexpr char empty = '\0';
+    (void)XmlAttributeRecord::SetString(attribute, BorrowedAddress(&empty), attributes_);
 }
 
 void XmlNodeDataRecordAdapter::SetRaw(const std::uint32_t attribute,
                                        const std::uint32_t data,
                                        const std::uint32_t size) {
-    XmlTemporary size_address(*this, 4u);
-    attributes_.WriteWord(size_address.Address(), size);
     (void)XmlAttributeRecord::SetValue(attribute, data,
-                                        size_address.Address(), attributes_);
+                                        BorrowedAddress(&size), attributes_);
 }
 
 void XmlNodeDataRecordAdapter::AddAttribute(const std::uint32_t node,
@@ -206,13 +209,7 @@ void XmlNodeDataRecordAdapter::AddAttribute(const std::uint32_t node,
 }
 
 void XmlNodeDataRecordAdapter::DestroyAttribute(const std::uint32_t attribute) {
-    try {
-        (void)XmlAttributeRecord::Destroy(attribute, attributes_);
-    } catch (...) {
-        (void)attributes_.FreeBlock(attribute);
-        throw;
-    }
-    (void)attributes_.FreeBlock(attribute);
+    (void)XmlAttributeRecord::Destroy(attribute, attributes_);
 }
 
 std::uint32_t XmlNodeDataRecordAdapter::CreateNode() {
@@ -225,6 +222,10 @@ std::uint32_t XmlNodeDataRecordAdapter::CreateNode() {
         throw;
     }
     return node;
+}
+void XmlNodeDataRecordAdapter::DestroyNode(std::uint32_t node) {
+    (void)XmlDocumentRecord::DestroyNode(node,globals_,documents_);
+    (void)documents_.FreeMemory(node);
 }
 
 }  // namespace pal4

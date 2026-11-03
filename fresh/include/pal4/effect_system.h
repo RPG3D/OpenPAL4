@@ -34,6 +34,9 @@ public:
 class IEffectSystemLoadRuntime {
 public:
     virtual ~IEffectSystemLoadRuntime() = default;
+    // The returned name remains owned until EndLoadName, including cache hits.
+    [[nodiscard]] virtual std::string_view BeginLoadName(std::string_view name) = 0;
+    virtual void EndLoadName() noexcept = 0;
     [[nodiscard]] virtual std::uint32_t InitializeSystem() = 0;
     [[nodiscard]] virtual std::uint8_t ReadByte(std::uint32_t address) = 0;
     [[nodiscard]] virtual std::uint32_t ReadWord(std::uint32_t address) = 0;
@@ -46,7 +49,10 @@ public:
                                  std::uint32_t instance) = 0;
     virtual void BeginScriptScope() = 0;
     virtual void EndScriptScope() = 0;
-    [[nodiscard]] virtual std::string_view EffectDirectory() = 0;
+    // A miss retains its path through Dialog loading, then releases it before
+    // EndScriptScope. Release is also valid after partial path construction.
+    [[nodiscard]] virtual std::string_view BuildFilePath(std::string_view name) = 0;
+    virtual void ReleaseFilePath() noexcept = 0;
     [[nodiscard]] virtual std::uint32_t OpenFile(std::string_view path) = 0;
     virtual void CloseFile(std::uint32_t file) = 0;
     [[nodiscard]] virtual std::uint32_t CreateXmlDocument(

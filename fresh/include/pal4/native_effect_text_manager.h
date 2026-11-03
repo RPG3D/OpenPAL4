@@ -11,6 +11,7 @@ class NativeEventDocumentRuntime;
 // Owns a template tree and constructs a native16-byte manager image, either
 // internal or caller-owned. Borrowed services/storage must outlive it;
 // properties returned by Find are borrowed until Clear/Load.
+// Managers in the same native allocation domain share the original tree nil.
 class NativeEffectTextManager final {
 public:
     NativeEffectTextManager(NativeBaseObjectMemory&, NativeEventDocumentRuntime&);
@@ -26,8 +27,13 @@ public:
     [[nodiscard]] std::uint32_t Find(std::string_view name);
     // Native cache node (+28 is the document); missing names return the head.
     [[nodiscard]] std::uint32_t FindNode(std::string_view name);
+    // Borrow an initialized native VC6 key without creating a lookup string.
+    [[nodiscard]] std::uint32_t FindNodeByKeyRecord(std::uint32_t key);
     // Transfer an owned document only on true. Unlike Add, does not clone it.
     [[nodiscard]] bool Adopt(std::string_view name,std::uint32_t document);
+    // Key storage uses the same native allocator; insertion retains a COW
+    // reference. The key remains caller-owned and the document transfers on true.
+    [[nodiscard]] bool AdoptKeyRecord(std::uint32_t key,std::uint32_t document);
     void Clear();
 private:
     class Runtime;

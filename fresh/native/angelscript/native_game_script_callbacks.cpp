@@ -1193,6 +1193,10 @@ void NativeGameScriptCallbacks::InvokeImplementation(int system_id, asIScriptGen
         (void)arguments.SetReturnFloat(
             Require(services_.player_position, system_id).CurrentY());
         return;
+    case -193:
+        (void)arguments.SetReturnFloat(
+            Require(services_.player_position, system_id).CurrentZ());
+        return;
     case -91: {
         auto& camera_mode = Require(services_.camera_mode, system_id);
         camera_mode.FlushMainCameraTailYaw(camera_mode.ActorControl());

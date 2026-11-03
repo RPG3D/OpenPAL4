@@ -32,12 +32,19 @@ std::uint32_t XmlNodeArray::InsertCopies(
             static_cast<std::int32_t>(newCapacity) < 0 ? 0u : newCapacity;
         const auto newBegin = runtime.Allocate(stride * allocatedCapacity);
         auto destination = newBegin;
-        for (auto node = oldBegin; node != position; node += stride, destination += stride)
-            (void)CopyConstructNode(destination, node, runtime);
-        for (auto remaining = count; remaining != 0u; --remaining, destination += stride)
-            (void)CopyConstructNode(destination, source, runtime);
-        for (auto node = position; node != oldEnd; node += stride, destination += stride)
-            (void)CopyConstructNode(destination, node, runtime);
+        try {
+            for (auto node = oldBegin; node != position; node += stride, destination += stride)
+                (void)CopyConstructNode(destination, node, runtime);
+            for (auto remaining = count; remaining != 0u; --remaining, destination += stride)
+                (void)CopyConstructNode(destination, source, runtime);
+            for (auto node = position; node != oldEnd; node += stride, destination += stride)
+                (void)CopyConstructNode(destination, node, runtime);
+        } catch (...) {
+            for (auto node = newBegin; node != destination; node += stride)
+                runtime.DestroyNode(node);
+            runtime.Free(newBegin);
+            throw;
+        }
         for (auto node = oldBegin; node != oldEnd; node += stride)
             runtime.DestroyNode(node);
         runtime.Free(oldBegin);

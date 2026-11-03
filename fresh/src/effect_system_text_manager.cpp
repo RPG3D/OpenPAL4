@@ -12,7 +12,7 @@ std::uint32_t EffectSystemTextManager::Construct(
     runtime.WriteByte(manager + 1u, initial_byte);
     runtime.WriteByte(manager + 8u, 0u);
 
-    const auto candidate = runtime.Allocate(36u);
+    const auto candidate = runtime.AllocateSharedNil();
     runtime.WriteWord(candidate + 4u, 0u);
     runtime.WriteWord(candidate + 32u, 1u);
     if (runtime.SharedNil() == 0u) {
@@ -21,9 +21,20 @@ std::uint32_t EffectSystemTextManager::Construct(
         runtime.WriteWord(candidate + 8u, 0u);
     }
     runtime.SetSharedNilReferences(runtime.SharedNilReferences() + 1u);
-    if (candidate != runtime.SharedNil()) runtime.Free(candidate);
+    if (candidate != runtime.SharedNil()) runtime.FreeSharedNil(candidate);
 
-    const auto head = runtime.Allocate(36u);
+    std::uint32_t head{};
+    try { head = runtime.Allocate(36u); }
+    catch (...) {
+        const auto references = runtime.SharedNilReferences() - 1u;
+        runtime.SetSharedNilReferences(references);
+        if (references == 0u) {
+            const auto nil = runtime.SharedNil();
+            runtime.SetSharedNil(0u);
+            runtime.FreeSharedNil(nil);
+        }
+        throw;
+    }
     runtime.WriteWord(head + 4u, runtime.SharedNil());
     runtime.WriteWord(head + 32u, 0u);
     runtime.WriteWord(manager + 4u, head);
@@ -61,7 +72,7 @@ std::uint32_t EffectSystemTextManager::Destruct(
     if (references != 0u) return references;
     const auto nil = runtime.SharedNil();
     runtime.SetSharedNil(0u);
-    return nil != 0u ? runtime.Free(nil) : 0u;
+    return nil != 0u ? runtime.FreeSharedNil(nil) : 0u;
 }
 
 bool EffectSystemTextManager::Contains(

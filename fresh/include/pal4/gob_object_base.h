@@ -73,7 +73,21 @@ public:
     virtual std::uint32_t ProcessMarker() = 0;
 };
 
+class IGobObjectDocumentRuntime {
+public:
+    virtual ~IGobObjectDocumentRuntime() = default;
+    virtual std::uint32_t ReadWord(std::uint32_t address) = 0;
+    virtual void WriteWord(std::uint32_t address,std::uint32_t value) = 0;
+    virtual void DestructXmlDocument(std::uint32_t document) = 0;
+    virtual std::uint32_t FreeMemory(std::uint32_t memory) = 0;
+    virtual std::uint32_t AllocateMemory(std::uint32_t size) = 0;
+    virtual std::uint32_t InitializeXmlDocument(std::uint32_t memory,
+        std::string_view root,std::uint32_t mode) = 0;
+    virtual std::uint32_t CreateXmlNode(std::uint32_t document,std::string_view name) = 0;
+};
+
 class IGobObjectBaseRuntime : public IGobObjectConstructRuntime,
+                             public IGobObjectDocumentRuntime,
                              public IGobInteractionBoundsRuntime,
                               public IGobObjectVisibilityRuntime, public IGobBaseCleanupRuntime,
                               public IGobResearchUseRuntime {
@@ -177,7 +191,7 @@ public:
         std::uint32_t object, float delta_seconds,
         IGobObjectBaseRuntime& runtime);
     [[nodiscard]] static std::uint32_t CreateParametersNode(
-        std::uint32_t object, IGobObjectBaseRuntime& runtime);
+        std::uint32_t object, IGobObjectDocumentRuntime& runtime);
     [[nodiscard]] static std::uint32_t LoadAndInitialize(
         std::uint32_t object, std::uint32_t first,
         std::uint32_t second, std::uint32_t third,

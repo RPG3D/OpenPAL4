@@ -10,8 +10,11 @@ namespace pal4 {
 class ComparisonCrtTrace final {
 public:
     using Record=ComparisonRandomCallTrace::Record;
-    explicit ComparisonCrtTrace(bool enabled,std::uint32_t capacity=262144u)
-        :full_(enabled,capacity),preparation_(enabled,64u),script_(enabled,4096u),seeds_(enabled,4096u),
+    explicit ComparisonCrtTrace(bool enabled,std::uint32_t capacity=262144u,
+        bool recent=false)
+        :full_(enabled,capacity,ComparisonRandomGenerator::crt,
+               recent?ComparisonTraceRetention::Recent:ComparisonTraceRetention::Prefix),
+         preparation_(enabled,64u),script_(enabled,4096u),seeds_(enabled,4096u),
          attribution_(enabled ? std::make_unique<ComparisonCrtAttribution>() : nullptr){}
     bool Enabled()const noexcept{return full_.Enabled();}
     void Add(Record record){
@@ -49,7 +52,8 @@ private:
 };
 inline ComparisonCrtTrace& GetComparisonCrtTrace() {
     static ComparisonCrtTrace trace(std::getenv("PAL4_COMPARE_SCRIPTED_INPUT") &&
-                                    std::getenv("PAL4_COMPARE_CRT_TRACE"));
+                                    std::getenv("PAL4_COMPARE_CRT_TRACE"),262144u,
+                                    std::getenv("PAL4_COMPARE_CRT_RECENT")!=nullptr);
     return trace;
 }
 } // namespace pal4

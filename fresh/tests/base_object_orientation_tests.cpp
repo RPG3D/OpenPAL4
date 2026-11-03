@@ -95,5 +95,5 @@ void CheckUpdate(float normalized_x, double expected_radians) {
 int main() {
     CheckUpdate(1.0f, 1.25);
     CheckUpdate(0.0f, 1.25);
-    CheckUpdate(-1.0f, 6.283185307179586 - 1.25);
+    CheckUpdate(-1.0f, static_cast<float>(6.283185307179586 - 1.25));
 }

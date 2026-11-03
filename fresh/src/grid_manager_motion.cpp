@@ -1,4 +1,6 @@
 #include "pal4/grid_manager.h"
+#include "movement_vector_math.h"
+#include "pal4/comparison_helper_interpolation_trace.h"
 
 #include <bit>
 #include <cmath>
@@ -21,20 +23,14 @@ void WriteTriple(GridManagerState& state, const std::uint32_t first_word,
             std::bit_cast<std::uint32_t>(value[axis]);
 }
 
-double LengthSquared(const GridVector3& value) {
-    return static_cast<double>(value[0]) * value[0] +
-           static_cast<double>(value[1]) * value[1] +
-           static_cast<double>(value[2]) * value[2];
-}
-
 GridVector3 LimitLength(const GridVector3& value, const float limit) {
-    const double squared = LengthSquared(value);
-    if (squared <= static_cast<double>(limit) * limit)
+    const float squared = movement_detail::Dot(value,value);
+    const volatile float limit_squared=limit*limit;
+    if (!(squared > limit_squared))
         return value;
-    const double scale = static_cast<double>(limit) / std::sqrt(squared);
-    return {static_cast<float>(value[0] * scale),
-            static_cast<float>(value[1] * scale),
-            static_cast<float>(value[2] * scale)};
+    const volatile float length=static_cast<float>(std::sqrt(static_cast<double>(squared)));
+    const volatile float scale=limit/length;
+    return {value[0]*scale,value[1]*scale,value[2]*scale};
 }
 
 }  // namespace
@@ -68,16 +64,20 @@ GridManagerState& GridManager::UpdatePositionAndVelocity(
     const auto acceleration = LimitLength(requested_acceleration,
                                            acceleration_limit);
     const float mass = runtime.ReadScalar(state, 80u);
+    const volatile float inverse_mass=1.f/mass;
     GridVector3 scaled_acceleration{};
     for (std::uint32_t axis = 0u; axis < 3u; ++axis)
-        scaled_acceleration[axis] = acceleration[axis] / mass;
+        scaled_acceleration[axis] = acceleration[axis] * inverse_mass;
     const auto previous_velocity = runtime.ReadVelocity(state);
     if (delta_time > 0.0f) {
         const float blend = ClampValue(
             ClampValue(delta_time * 9.0f, 0.15000001f, 0.40000001f),
             0.0f, 1.0f);
-        WriteTriple(state, 39u, InterpolateVector(
-            blend, ReadTriple(state, 39u), scaled_acceleration));
+        const auto previous=ReadTriple(state,39u);
+        const auto blended=InterpolateVector(blend,previous,scaled_acceleration);
+        GetComparisonHelperInterpolationTrace().Add(1u,state.base_words[22u],
+            blend,previous,scaled_acceleration,blended);
+        WriteTriple(state,39u,blended);
     }
     const auto current_acceleration = ReadTriple(state, 39u);
     GridVector3 velocity{};
@@ -85,8 +85,7 @@ GridManagerState& GridManager::UpdatePositionAndVelocity(
         velocity[axis] = previous_velocity[axis] +
                          delta_time * current_acceleration[axis];
     velocity = LimitLength(velocity, runtime.ReadScalar(state, 120u));
-    runtime.SetSpeed(state, static_cast<float>(
-        std::sqrt(LengthSquared(velocity))));
+    runtime.SetSpeed(state,movement_detail::Length(velocity));
     const auto old_position = runtime.ReadPosition(state);
     GridVector3 next_position{};
     for (std::uint32_t axis = 0u; axis < 3u; ++axis)
@@ -96,9 +95,12 @@ GridManagerState& GridManager::UpdatePositionAndVelocity(
     runtime.CommitVelocity(state, velocity, delta_time);
     (void)UpdatePhysics(state, delta_time, runtime);
     const auto final_position = runtime.ReadPosition(state);
-    WriteTriple(state, 35u, InterpolateVector(
-        ClampValue(delta_time * 0.059999999f, 0.0f, 1.0f),
-        ReadTriple(state, 35u), final_position));
+    const auto position_blend=ClampValue(delta_time*0.059999999f,0.f,1.f);
+    const auto previous=ReadTriple(state,35u);
+    const auto blended=InterpolateVector(position_blend,previous,final_position);
+    GetComparisonHelperInterpolationTrace().Add(2u,state.base_words[22u],
+        position_blend,previous,final_position,blended);
+    WriteTriple(state,35u,blended);
     return state;
 }
 
@@ -109,9 +111,10 @@ std::uint32_t GridManager::SetVelocityDirection(
     if (!(speed > 0.0f))
         return 0u;
     const float current_speed = runtime.ReadSpeed(state);
+    const volatile float inverse_speed=1.f/current_speed;
     GridVector3 direction{};
     for (std::uint32_t axis = 0u; axis < 3u; ++axis)
-        direction[axis] = velocity[axis] / current_speed;
+        direction[axis] = velocity[axis] * inverse_speed;
     return runtime.ApplyDirection(state, direction);
 }
 

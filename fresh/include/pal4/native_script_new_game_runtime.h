@@ -24,7 +24,8 @@ public:
                                IPlayerActorAssetLoader* actor_assets = nullptr,
                                IGameResourceManagerRuntime* transforms = nullptr,
                                NativePkFileManagerRuntime* packages = nullptr,
-                               IPlayerManagerOperationsRuntime* loaded_operations = nullptr);
+                               IPlayerManagerOperationsRuntime* loaded_operations = nullptr,
+                               IPlayerRoleAnimationLifecycle* animations = nullptr);
 
     std::uint32_t InitializePlayerManager() override;
     void ResetAllPlayerStates(std::uint32_t manager) override;

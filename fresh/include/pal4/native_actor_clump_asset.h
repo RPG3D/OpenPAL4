@@ -21,6 +21,10 @@ public:
 
     [[nodiscard]] bool Load(const std::filesystem::path& game_root,
                             std::string_view model);
+    // GameObject_Initialize loads animation data between main and shadow.
+    [[nodiscard]] bool LoadMain(const std::filesystem::path& game_root,
+                                std::string_view model);
+    [[nodiscard]] bool LoadShadow();
     void Unload() noexcept;
     [[nodiscard]] RpClump* Main() const noexcept { return main_; }
     [[nodiscard]] RpClump* Shadow() const noexcept { return shadow_; }
@@ -54,6 +58,9 @@ public:
     }
 
 private:
+    std::filesystem::path game_root_;
+    std::string model_;
+    bool shadow_loaded_{};
     RpClump* main_ = nullptr;
     RpClump* shadow_ = nullptr;
     RpLight* shadow_light_ = nullptr;

@@ -3,6 +3,7 @@
 #include "pal4/player_actor_asset_loader.h"
 #include "pal4/player_manager_loader.h"
 #include "pal4/player_manager_slot_data_copier.h"
+#include "pal4/player_role_animation_lifecycle.h"
 
 #include <array>
 #include <cstddef>
@@ -29,7 +30,8 @@ public:
                                 IPlayerActorAssetLoader* actors = nullptr,
                                 IGameResourceManagerRuntime* transforms = nullptr,
                                 NativePkFileManagerRuntime* packages = nullptr,
-                                IPlayerManagerOperationsRuntime* loaded_operations = nullptr);
+                                IPlayerManagerOperationsRuntime* loaded_operations = nullptr,
+                                IPlayerRoleAnimationLifecycle* animations = nullptr);
 
     std::uint32_t Log(std::uint32_t line) override;
     void ProcessScripts() override;
@@ -49,7 +51,7 @@ public:
                          std::uint32_t index) override;
     void ProcessLoadedData(std::uint32_t manager) override;
     void CleanupScripts() override;
-    void RollbackActors() noexcept;
+    void RollbackActors();
     void CommitActors() noexcept;
 
 private:
@@ -60,6 +62,7 @@ private:
     IGameResourceManagerRuntime* transforms_;
     NativePkFileManagerRuntime* packages_;
     IPlayerManagerOperationsRuntime* loaded_operations_;
+    IPlayerRoleAnimationLifecycle* animations_;
     bool primary_script_active_{};
     bool host_script_active_{};
     std::uint32_t last_database_{};

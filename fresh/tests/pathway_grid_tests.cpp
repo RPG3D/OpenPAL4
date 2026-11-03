@@ -1,4 +1,5 @@
 #include "pal4/pathway_grid.h"
+#include "support/random_movement_x87_reference.h"
 
 #include <array>
 #include <bit>
@@ -177,6 +178,46 @@ void QueryPath() {
           "coordinate query interpolates within each segment");
 }
 
+void CapturedM15PathDirections() {
+    Runtime runtime;pal4::PathwayGridState state{};
+    (void)pal4::PathwayGrid::Construct(state,true);
+    constexpr std::array points{
+        pal4::PathwayPoint{{6218.28466796875f,1572.0003662109375f,-121.49848175048828f}},
+        pal4::PathwayPoint{{5782.4052734375f,1476.740966796875f,75.1475601196289f}},
+        pal4::PathwayPoint{{5209.92822265625f,1328.1846923828125f,694.409423828125f}},
+        pal4::PathwayPoint{{5041.6552734375f,1374.58837890625f,1203.50244140625f}}};
+    Check(pal4::PathwayGrid::Initialize(state,points,0u,false,runtime),
+          "captured M15 helper7 path initializes");
+    constexpr std::array<std::uint32_t,12> directions{0,0,0,
+        0xbf64daceu,0xbe480f7cu,0x3ece7e9eu,
+        0xbf2b24e3u,0xbe31a550u,0x3f39216du,
+        0xbea015d5u,0x3db09552u,0x3f722939u};
+    for(std::size_t i=0;i<directions.size();++i)
+        Check(runtime.ReadWord(state.directions+static_cast<std::uint32_t>(i)*4u)==directions[i],
+              "captured path direction bits match original reciprocal multiplication");
+    const pal4::PathwayPoint prediction{{std::bit_cast<float>(0x45c1e212u),
+        std::bit_cast<float>(0x44c47fc1u),std::bit_cast<float>(0xc2f05e36u)}};
+    state.segment_length_bits=runtime.ReadWord(state.lengths+4u);
+    for(unsigned axis=0;axis<3u;++axis)state.direction_bits[axis]=directions[3u+axis];
+#if defined(_MSC_VER) && defined(_M_IX86)
+    pal4::BehaviorVector3 difference{},direction{};
+    for(unsigned axis=0;axis<3u;++axis){
+        difference[axis]=prediction.coordinates[axis]-points[0].coordinates[axis];
+        direction[axis]=std::bit_cast<float>(directions[3u+axis]);
+    }
+    Check(std::bit_cast<std::uint32_t>(pal4::test::MovementVectorDotPc24(direction,difference))==0x4151201fu,
+          "actual original projection instructions reproduce frame88 input");
+#endif
+    (void)pal4::PathwayGrid::DistanceToSegment(state,prediction,points[0],points[1]);
+    Check(state.projection_bits==0x4151201fu && state.nearest_bits[2]==0xc2e87444u,
+          "frame88 segment projection and nearest point match original PC24");
+    pal4::PathwayPoint tangent{};float outside{};
+    const auto nearest=pal4::PathwayGrid::ProjectToTube(state,prediction,tangent,outside,runtime);
+    Check(std::bit_cast<std::array<std::uint32_t,3>>(nearest.coordinates)==
+              std::array<std::uint32_t,3>{0x45c1f4cdu,0x44c42e4cu,0xc2e87444u},
+          "full frame88 path query selects the original nearest point");
+}
+
 }  // namespace
 
 int main() {
@@ -184,6 +225,7 @@ int main() {
     LoopAndReplacement();
     AllocationFailure();
     QueryPath();
+    CapturedM15PathDirections();
     {
         Runtime runtime;
         pal4::PathwayGridState state{};
@@ -216,4 +258,5 @@ int main() {
               "no winning segment preserves tangent and returns original zero-nearest distance");
     }
     std::cout << "Pathway grid tests passed\n";
+    return 0;
 }

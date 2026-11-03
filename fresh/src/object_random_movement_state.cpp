@@ -1,7 +1,5 @@
 #include "pal4/object_random_movement_state.h"
 
-#include "pal4/vector3_operations.h"
-
 #include <bit>
 #include <cmath>
 
@@ -18,6 +16,27 @@ void WriteDirection(ObjectRandomMovementState& state,
         state.words[50u + index] = std::bit_cast<std::uint32_t>(direction[index]);
 }
 
+float LengthInOrder(float first, float second, float third) {
+    // Original game x87 PC24 rounds each multiply/add and FSQRT. Callers
+    // preserve their different operand associations; no RenderWare call here.
+    const volatile float first_squared = first * first;
+    const volatile float second_squared = second * second;
+    const volatile float pair = first_squared + second_squared;
+    const volatile float third_squared = third * third;
+    const volatile float sum = pair + third_squared;
+    return static_cast<float>(std::sqrt(static_cast<double>(sum)));
+}
+
+bool NormalizeDirection(BehaviorVector3& direction) {
+    // CalculateDotProduct40BF20: (Z*Z + Y*Y) + X*X, followed by
+    // 42CEA9/42CF52 FSQRT and reciprocal at PC24.
+    const auto length = LengthInOrder(direction[2], direction[1], direction[0]);
+    if (!(length > 0.f)) return false;
+    const volatile float inverse = 1.f / length;
+    for (auto& component : direction) component = inverse * component;
+    return true;
+}
+
 }  // namespace
 
 BehaviorVector3 ObjectRandomMovementSpatialRuntimeStub::Position(
@@ -30,10 +49,11 @@ bool ObjectRandomMovementProximity::IsOutsideTargetRadius(
     ObjectRandomMovementState& state,
     IObjectRandomMovementSpatialRuntime& runtime) {
     const auto position = runtime.Position(state);
-    const double dx = static_cast<double>(position[0]) - FloatAt(state, 53u);
-    const double dy = static_cast<double>(position[1]) - FloatAt(state, 54u);
-    const double dz = static_cast<double>(position[2]) - FloatAt(state, 55u);
-    const double distance = std::sqrt(dx * dx + dy * dy + dz * dz);
+    const float dx = position[0] - FloatAt(state, 53u);
+    const float dy = position[1] - FloatAt(state, 54u);
+    const float dz = position[2] - FloatAt(state, 55u);
+    // 42D002..42D032 differs from CalculateDotProduct: Z,X,Y.
+    const auto distance = LengthInOrder(dz, dx, dy);
     return distance >= FloatAt(state, 47u);
 }
 
@@ -48,14 +68,8 @@ std::uint32_t ObjectRandomMovementStateUpdate::Update(
             FloatAt(state, 55u) - position[2]};
         const auto original_z = std::bit_cast<std::uint32_t>(direction[2]);
         WriteDirection(state, direction);
-        const double length = std::sqrt(
-            static_cast<double>(direction[0]) * direction[0] +
-            static_cast<double>(direction[1]) * direction[1] +
-            static_cast<double>(direction[2]) * direction[2]);
-        if (!(length > 0.0)) return original_z;
-        BehaviorVector3 normalized{};
-        Vector3Operations::Normalize(direction, normalized);
-        WriteDirection(state, normalized);
+        if (!NormalizeDirection(direction)) return original_z;
+        WriteDirection(state, direction);
         return 0u;
     }
 
@@ -66,9 +80,8 @@ std::uint32_t ObjectRandomMovementStateUpdate::Update(
     }
 
     const auto random = runtime.RandomVector();
-    const BehaviorVector3 horizontal{random[0], 0.0f, random[2]};
-    BehaviorVector3 direction{};
-    Vector3Operations::Normalize(horizontal, direction);
+    BehaviorVector3 direction{random[0], 0.0f, random[2]};
+    (void)NormalizeDirection(direction);
     WriteDirection(state, direction);
     state.words[49] = 0u;
     return std::bit_cast<std::uint32_t>(direction[1]);

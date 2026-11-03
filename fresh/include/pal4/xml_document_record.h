@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
 #include <string_view>
 
 namespace pal4 {
@@ -15,6 +16,10 @@ public:
     virtual ~IXmlDocumentRecordRuntime() = default;
     [[nodiscard]] virtual std::uint32_t AllocateMemory(std::uint32_t bytes) = 0;
     [[nodiscard]] virtual std::uint32_t FreeMemory(std::uint32_t address) = 0;
+    [[nodiscard]] virtual std::uint32_t AllocateSharedNil() = 0;
+    [[nodiscard]] virtual std::uint32_t FreeSharedNil(std::uint32_t address) = 0;
+    virtual void DocumentReferenceAdded() noexcept = 0;
+    virtual void DocumentReferenceRemoved() noexcept = 0;
     virtual void WriteWord(std::uint32_t address, std::uint32_t value) = 0;
     [[nodiscard]] virtual std::uint32_t ReadWord(std::uint32_t address) = 0;
     virtual void WriteByte(std::uint32_t address, std::uint8_t value) = 0;
@@ -27,8 +32,10 @@ public:
     virtual void RemoveNode(std::uint32_t document, std::uint32_t node) = 0;
     virtual void GetFirstElement(std::uint32_t document) = 0;
     [[nodiscard]] virtual std::uint32_t EmptyTextAddress() = 0;
+    // IDA5F57E3 uses a caller-owned 28-byte stack record. Only its copied
+    // value may allocate; DestroyTemporaryAttribute must not free this storage.
     [[nodiscard]] virtual std::uint32_t CopyAttributeToTemporary(
-        std::uint32_t source) = 0;
+        std::uint32_t source, std::span<std::uint32_t, 7> storage) = 0;
     virtual void DestroyTemporaryAttribute(std::uint32_t temporary) = 0;
     virtual void CleanupNode(std::uint32_t node) = 0;
     virtual void FreeAttributeValue(std::uint32_t attribute) = 0;
@@ -43,10 +50,13 @@ public:
         std::uint32_t node, std::uint32_t length) = 0;
     [[nodiscard]] virtual std::uint32_t FindAttributeNode(
         std::uint32_t tree, std::string_view name) = 0;
-    [[nodiscard]] virtual std::uint32_t InsertAttributeNode(
+    // AddAttribute owns a separate temporary lookup key (IDA5F5C60).
+    [[nodiscard]] virtual std::uint32_t FindAttributeNodeForAddition(
         std::uint32_t tree, std::string_view name) = 0;
-    virtual void AssignAttributeValue(std::uint32_t destination,
-                                      std::uint32_t source) = 0;
+    // Complete pair/default-attribute cleanup and value assignment while the
+    // insertion key remains alive; return only after releasing that key.
+    [[nodiscard]] virtual std::uint32_t InsertAttributeNode(
+        std::uint32_t tree, std::string_view name, std::uint32_t source) = 0;
     virtual void DestroyEmbeddedAttribute(std::uint32_t attribute) = 0;
     [[nodiscard]] virtual std::int32_t CompareAttributeRange(
         std::uint32_t input, std::uint32_t node_text) = 0;
