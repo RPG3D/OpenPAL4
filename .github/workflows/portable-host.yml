@@ -5,7 +5,7 @@ on:
   pull_request:
     paths: ['fresh/**', '.github/workflows/portable-host.yml']
   push:
-    branches: [master]
+    branches: [main, master]
     paths: ['fresh/**', '.github/workflows/portable-host.yml']
 
 permissions:

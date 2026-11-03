@@ -31,8 +31,8 @@
     },
     {
       "path": ".github/workflows/portable-host.yml",
-      "sha256": "1ddbb3addf6f71e183db0d722de6918df5013cef7db5f18f9a44efda16acc66f",
-      "bytes": 959
+      "sha256": "ea2f9b74c44af6ea27fa986cc55e4d4863d3dae154dc5b7185c79b1a9dda91f9",
+      "bytes": 965
     },
     {
       "path": ".gitignore",
