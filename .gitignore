@@ -1,0 +1,42 @@
+build/
+fresh/build/
+cmake-out/
+fresh/ports/android/.gradle/
+fresh/ports/android/local.properties
+fresh/ports/android/app/.cxx/
+__pycache__/
+
+
+# Local build outputs and runtime diagnostics
+/build_*/
+/*.obj
+/CEGUI.log
+*.pyc
+/hs_err_pid*.log
+/replay_pid*.log
+
+# External SDK/reference inputs; keep local, do not redistribute
+/refcode/
+
+# Build products, signing material and local runtime logs are never sources.
+*.exe
+*.dll
+*.lib
+*.a
+*.so
+*.dylib
+*.obj
+*.pdb
+*.apk
+*.aab
+*.nro
+*.nsp
+*.jks
+*.keystore
+*.cpk
+*.csb
+*.bik
+*.dff
+*.bsp
+*.dds
+/launcher.log

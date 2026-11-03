@@ -1,0 +1,4285 @@
+[
+  {
+    "api_name": "giPlayMovieFinal",
+    "script_func_id": -318,
+    "signature": "void giPlayMovieFinal( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowCommonDialogInSelectMode",
+    "script_func_id": -317,
+    "signature": "void giShowCommonDialogInSelectMode( string &in, float, float )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGotoLogoWait",
+    "script_func_id": -316,
+    "signature": "void giGotoLogoWait()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNPCFlyTo",
+    "script_func_id": -315,
+    "signature": "void giNPCFlyTo( string &in, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowPoetry",
+    "script_func_id": -314,
+    "signature": "void giShowPoetry( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentMovment",
+    "script_func_id": -313,
+    "signature": "void giPlayerCurrentMovment( float, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentFaceToGOB",
+    "script_func_id": -312,
+    "signature": "void giPlayerCurrentFaceToGOB( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBScale",
+    "script_func_id": -311,
+    "signature": "void giGOBScale( string &in, float, float, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowWorldMap",
+    "script_func_id": -310,
+    "signature": "void giShowWorldMap()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowTutorial",
+    "script_func_id": -309,
+    "signature": "void giShowTutorial( int iKey )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int iKey",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBMovment",
+    "script_func_id": -308,
+    "signature": "void giGOBMovment( string &in, float, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 6,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowSelectDialog",
+    "script_func_id": -307,
+    "signature": "void giShowSelectDialog( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowCommonDialog",
+    "script_func_id": -306,
+    "signature": "void giShowCommonDialog( string &in, float, float )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giMSTBlendIn",
+    "script_func_id": -305,
+    "signature": "void giMSTBlendIn( string &in, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giMSTBlendOut",
+    "script_func_id": -304,
+    "signature": "void giMSTBlendOut( string &in, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giOBJBlendIn",
+    "script_func_id": -303,
+    "signature": "void giOBJBlendIn( string &in, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giOBJBlendOut",
+    "script_func_id": -302,
+    "signature": "void giOBJBlendOut( string &in, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giStartJigsawGame",
+    "script_func_id": -301,
+    "signature": "void giStartJigsawGame( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giStartPuzzleGame",
+    "script_func_id": -300,
+    "signature": "void giStartPuzzleGame( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giStartTradeSystem",
+    "script_func_id": -299,
+    "signature": "void giStartTradeSystem( string &in, string &in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giObjectDoAction",
+    "script_func_id": -298,
+    "signature": "void giObjectDoAction( string &in, string &in, int, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayMovie",
+    "script_func_id": -297,
+    "signature": "void giPlayMovie( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giFlashInRed",
+    "script_func_id": -296,
+    "signature": "void giFlashInRed( float, bool, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giFlashOutRed",
+    "script_func_id": -295,
+    "signature": "void giFlashOutRed( float, bool, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giFlashInWhite",
+    "script_func_id": -294,
+    "signature": "void giFlashInWhite( float, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giFlashOutWhite",
+    "script_func_id": -293,
+    "signature": "void giFlashOutWhite( float, bool, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giFlashInBlack",
+    "script_func_id": -292,
+    "signature": "void giFlashInBlack( float, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giFlashOutBlack",
+    "script_func_id": -291,
+    "signature": "void giFlashOutBlack( float, bool, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraWait",
+    "script_func_id": -290,
+    "signature": "void giCameraWait()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraRunCircle",
+    "script_func_id": -289,
+    "signature": "int giCameraRunCircle( bool )",
+    "return_type": "int",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraRunSingle",
+    "script_func_id": -288,
+    "signature": "int giCameraRunSingle( string &in, bool )",
+    "return_type": "int",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraPrepare",
+    "script_func_id": -287,
+    "signature": "int giCameraPrepare( string &in )",
+    "return_type": "int",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcSetAng",
+    "script_func_id": -286,
+    "signature": "void giNpcSetAng( string &in, float )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcEndMove",
+    "script_func_id": -285,
+    "signature": "void giNpcEndMove( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcEndActionRepeat",
+    "script_func_id": -284,
+    "signature": "void giNpcEndActionRepeat( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcDoActionRepeat",
+    "script_func_id": -283,
+    "signature": "void giNpcDoActionRepeat( string &in, string &in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcResetDir",
+    "script_func_id": -282,
+    "signature": "void giNpcResetDir( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcFaceToCurrentPlayer",
+    "script_func_id": -281,
+    "signature": "void giNpcFaceToCurrentPlayer( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcBlendIn",
+    "script_func_id": -280,
+    "signature": "void giNpcBlendIn( string &in, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcBlendOut",
+    "script_func_id": -279,
+    "signature": "void giNpcBlendOut( string &in, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcFaceToPlayer",
+    "script_func_id": -278,
+    "signature": "void giNpcFaceToPlayer( string &in, int, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcFaceToNpc",
+    "script_func_id": -277,
+    "signature": "void giNpcFaceToNpc( string &in, string &in, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcSetDir",
+    "script_func_id": -276,
+    "signature": "void giNpcSetDir( string &in, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcSetRot",
+    "script_func_id": -275,
+    "signature": "void giNpcSetRot( string &in, string &in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcSetPos",
+    "script_func_id": -274,
+    "signature": "void giNpcSetPos( string &in, float, float, float )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcEndAction",
+    "script_func_id": -273,
+    "signature": "void giNpcEndAction( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcDoAction",
+    "script_func_id": -272,
+    "signature": "void giNpcDoAction( string &in, string &in, int, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcBackTo",
+    "script_func_id": -271,
+    "signature": "void giNpcBackTo( string &in, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcRunTo",
+    "script_func_id": -270,
+    "signature": "void giNpcRunTo( string &in, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcWalkTo",
+    "script_func_id": -269,
+    "signature": "void giNpcWalkTo( string &in, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCurrentPlayerEndMove",
+    "script_func_id": -268,
+    "signature": "void giCurrentPlayerEndMove()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerEndMove",
+    "script_func_id": -267,
+    "signature": "void giPlayerEndMove( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerEndActionRepeat",
+    "script_func_id": -266,
+    "signature": "void giPlayerEndActionRepeat( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerDoActionRepeat",
+    "script_func_id": -265,
+    "signature": "void giPlayerDoActionRepeat( int, string &in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCurrentPlayerFaceToNpc",
+    "script_func_id": -264,
+    "signature": "void giCurrentPlayerFaceToNpc( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerFaceToCurrentPlayer",
+    "script_func_id": -263,
+    "signature": "void giPlayerFaceToCurrentPlayer( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerBlendIn",
+    "script_func_id": -262,
+    "signature": "void giPlayerBlendIn( int, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerBlendOut",
+    "script_func_id": -261,
+    "signature": "void giPlayerBlendOut( int, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerBackTo",
+    "script_func_id": -260,
+    "signature": "void giPlayerBackTo( int, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentWalkTo",
+    "script_func_id": -259,
+    "signature": "void giPlayerCurrentWalkTo( float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerRunTo",
+    "script_func_id": -258,
+    "signature": "void giPlayerRunTo( int, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerWalkTo",
+    "script_func_id": -257,
+    "signature": "void giPlayerWalkTo( int, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerFaceToNpc",
+    "script_func_id": -256,
+    "signature": "void giPlayerFaceToNpc( int, string &in, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerSetDir",
+    "script_func_id": -255,
+    "signature": "void giPlayerSetDir( int, float, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerFaceToPlayer",
+    "script_func_id": -254,
+    "signature": "void giPlayerFaceToPlayer( int, int, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentSetAng",
+    "script_func_id": -253,
+    "signature": "void giPlayerCurrentSetAng( float )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerSetAng",
+    "script_func_id": -252,
+    "signature": "void giPlayerSetAng( int, float )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerSetRot",
+    "script_func_id": -251,
+    "signature": "void giPlayerSetRot( int, string &in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentSetPos",
+    "script_func_id": -250,
+    "signature": "void giPlayerCurrentSetPos( float, float, float )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerSetPos",
+    "script_func_id": -249,
+    "signature": "void giPlayerSetPos( int, float, float, float )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentEndAction",
+    "script_func_id": -248,
+    "signature": "void giPlayerCurrentEndAction()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentDoAction",
+    "script_func_id": -247,
+    "signature": "void giPlayerCurrentDoAction( string &in, int, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerEndAction",
+    "script_func_id": -246,
+    "signature": "void giPlayerEndAction( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerDoAction",
+    "script_func_id": -245,
+    "signature": "void giPlayerDoAction( int, string &in, int, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giTalkWait",
+    "script_func_id": -244,
+    "signature": "void giTalkWait()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giRandTalkRelease",
+    "script_func_id": -243,
+    "signature": "void giRandTalkRelease()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giRandTalk",
+    "script_func_id": -242,
+    "signature": "void giRandTalk()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giRandTalkPush",
+    "script_func_id": -241,
+    "signature": "void giRandTalkPush( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giTalk",
+    "script_func_id": -240,
+    "signature": "void giTalk( string &in, string &in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giWait",
+    "script_func_id": -239,
+    "signature": "void giWait( double )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "double",
+        "type": "double"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giScriptMusicResume",
+    "script_func_id": -238,
+    "signature": "void giScriptMusicResume()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giScriptMusicPause",
+    "script_func_id": -237,
+    "signature": "void giScriptMusicPause()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giUiTimerGetSaveData",
+    "script_func_id": -236,
+    "signature": "int giUiTimerGetSaveData()",
+    "return_type": "int",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetFullRage",
+    "script_func_id": -235,
+    "signature": "void giSetFullRage()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giResumeUiTimer",
+    "script_func_id": -234,
+    "signature": "void giResumeUiTimer()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPauseUiTimer",
+    "script_func_id": -233,
+    "signature": "void giPauseUiTimer()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giClearUiTimer",
+    "script_func_id": -232,
+    "signature": "void giClearUiTimer()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEnableSTS",
+    "script_func_id": -231,
+    "signature": "void giEnableSTS( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giConfigCombatVipMonster",
+    "script_func_id": -230,
+    "signature": "void giConfigCombatVipMonster( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCommonDialogGetLastSelect",
+    "script_func_id": -229,
+    "signature": "int giCommonDialogGetLastSelect()",
+    "return_type": "int",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerDetachEffect",
+    "script_func_id": -228,
+    "signature": "void giPlayerDetachEffect( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerHookEffect",
+    "script_func_id": -227,
+    "signature": "void giPlayerHookEffect( int, string &in, int )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giMstDetachEffect",
+    "script_func_id": -226,
+    "signature": "void giMstDetachEffect( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giMstAttachEffect",
+    "script_func_id": -225,
+    "signature": "void giMstAttachEffect( string &in, string &in, int )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcDetachEffect",
+    "script_func_id": -224,
+    "signature": "void giNpcDetachEffect( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcAttachEffect",
+    "script_func_id": -223,
+    "signature": "void giNpcAttachEffect( string &in, string &in, int )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPetShow",
+    "script_func_id": -222,
+    "signature": "void giPetShow( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetMinimapLevel",
+    "script_func_id": -221,
+    "signature": "void giSetMinimapLevel( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetPalTestResult",
+    "script_func_id": -220,
+    "signature": "int giGetPalTestResult( int )",
+    "return_type": "int",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAddPlayerFavor",
+    "script_func_id": -219,
+    "signature": "void giAddPlayerFavor( int, int, int )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giConfigCombatGroundCamera",
+    "script_func_id": -218,
+    "signature": "void giConfigCombatGroundCamera( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giTimeScriptTerminate",
+    "script_func_id": -217,
+    "signature": "void giTimeScriptTerminate()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giTimeScript",
+    "script_func_id": -216,
+    "signature": "void giTimeScript( float, string &in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAddRoundTimes",
+    "script_func_id": -215,
+    "signature": "void giAddRoundTimes()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEnableShadow",
+    "script_func_id": -214,
+    "signature": "void giEnableShadow( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAddPrescription",
+    "script_func_id": -213,
+    "signature": "void giAddPrescription( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giRemoveEquipment",
+    "script_func_id": -212,
+    "signature": "void giRemoveEquipment( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCheckEquipInInventory",
+    "script_func_id": -211,
+    "signature": "bool giCheckEquipInInventory( int )",
+    "return_type": "bool",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBReset",
+    "script_func_id": -210,
+    "signature": "void giGOBReset( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giResetPlayerToJumpStart",
+    "script_func_id": -209,
+    "signature": "void giResetPlayerToJumpStart()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetQuestDialogResult",
+    "script_func_id": -208,
+    "signature": "int giGetQuestDialogResult()",
+    "return_type": "int",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowQuestDialog",
+    "script_func_id": -207,
+    "signature": "void giShowQuestDialog( string& in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string& in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSelectDialogSetDefaultSelect",
+    "script_func_id": -206,
+    "signature": "void giSelectDialogSetDefaultSelect( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetMoney",
+    "script_func_id": -205,
+    "signature": "int giGetMoney()",
+    "return_type": "int",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerForbidenSkill",
+    "script_func_id": -204,
+    "signature": "void giPlayerForbidenSkill( int, int, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giStartUiTimer",
+    "script_func_id": -203,
+    "signature": "void giStartUiTimer( int, string& in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string& in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerSetPosRot",
+    "script_func_id": -201,
+    "signature": "void giPlayerSetPosRot( int, float, float, float, float )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giIsNightTime",
+    "script_func_id": -200,
+    "signature": "bool giIsNightTime()",
+    "return_type": "bool",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerTakeARest",
+    "script_func_id": -199,
+    "signature": "void giPlayerTakeARest()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetInnDialogResult",
+    "script_func_id": -198,
+    "signature": "int giGetInnDialogResult()",
+    "return_type": "int",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowInnDialog",
+    "script_func_id": -197,
+    "signature": "void giShowInnDialog( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giArenaSkillEnable",
+    "script_func_id": -196,
+    "signature": "void giArenaSkillEnable( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giArenaGetArea",
+    "script_func_id": -195,
+    "signature": "string giArenaGetArea()",
+    "return_type": "string",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giArenaGetName",
+    "script_func_id": -194,
+    "signature": "string giArenaGetName()",
+    "return_type": "string",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentGetPosZ",
+    "script_func_id": -193,
+    "signature": "float giPlayerCurrentGetPosZ()",
+    "return_type": "float",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentGetPosY",
+    "script_func_id": -192,
+    "signature": "float giPlayerCurrentGetPosY()",
+    "return_type": "float",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentGetPosX",
+    "script_func_id": -191,
+    "signature": "float giPlayerCurrentGetPosX()",
+    "return_type": "float",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetPropertyNumb",
+    "script_func_id": -190,
+    "signature": "int giGetPropertyNumb( int )",
+    "return_type": "int",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcResetEmotion",
+    "script_func_id": -189,
+    "signature": "void giNpcResetEmotion( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcSetEmotion",
+    "script_func_id": -188,
+    "signature": "void giNpcSetEmotion( string &in, string &in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giLINGSHALegsHealing",
+    "script_func_id": -187,
+    "signature": "void giLINGSHALegsHealing()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giLINGSHALegsInjured",
+    "script_func_id": -186,
+    "signature": "void giLINGSHALegsInjured( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentResetEmotion",
+    "script_func_id": -185,
+    "signature": "void giPlayerCurrentResetEmotion()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentSetEmotion",
+    "script_func_id": -184,
+    "signature": "void giPlayerCurrentSetEmotion( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerResetEmotion",
+    "script_func_id": -183,
+    "signature": "void giPlayerResetEmotion( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerSetEmotion",
+    "script_func_id": -182,
+    "signature": "void giPlayerSetEmotion( int, string &in )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowSignpost",
+    "script_func_id": -181,
+    "signature": "void giShowSignpost()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giHideGASkillObject",
+    "script_func_id": -180,
+    "signature": "void giHideGASkillObject()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPayMoney",
+    "script_func_id": -179,
+    "signature": "void giPayMoney( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAddMoney",
+    "script_func_id": -178,
+    "signature": "void giAddMoney( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giScriptClearCTXButCurrent",
+    "script_func_id": -177,
+    "signature": "void giScriptClearCTXButCurrent()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBSetPosition",
+    "script_func_id": -176,
+    "signature": "void giGOBSetPosition( string &in, float, float, float )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBDetachFromNPC",
+    "script_func_id": -175,
+    "signature": "void giGOBDetachFromNPC( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBAttachToNpc",
+    "script_func_id": -174,
+    "signature": "void giGOBAttachToNpc( string &in, string &in, string &in, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectDetachFromNpc",
+    "script_func_id": -173,
+    "signature": "void giEffectDetachFromNpc( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectAttachToNpc",
+    "script_func_id": -172,
+    "signature": "void giEffectAttachToNpc( string &in, string &in, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectDetachFromCurrentPlayer",
+    "script_func_id": -171,
+    "signature": "void giEffectDetachFromCurrentPlayer()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectDetachFromPlayer",
+    "script_func_id": -170,
+    "signature": "void giEffectDetachFromPlayer( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectAttachToCurrentPlayer",
+    "script_func_id": -169,
+    "signature": "void giEffectAttachToCurrentPlayer( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectAttachToPlayer",
+    "script_func_id": -168,
+    "signature": "void giEffectAttachToPlayer( int, string &in, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBDetachFromCurrentPlayer",
+    "script_func_id": -167,
+    "signature": "void giGOBDetachFromCurrentPlayer()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBDetachFromPlayer",
+    "script_func_id": -166,
+    "signature": "void giGOBDetachFromPlayer( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBAttachToCurrentPlayer",
+    "script_func_id": -165,
+    "signature": "void giGOBAttachToCurrentPlayer( string &in, string &in, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOBAttachToPlayer",
+    "script_func_id": -164,
+    "signature": "void giGOBAttachToPlayer( string &in, string &in, int, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSelectDialogGetLastSelect",
+    "script_func_id": -163,
+    "signature": "int giSelectDialogGetLastSelect()",
+    "return_type": "int",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSelectDialogAddItem",
+    "script_func_id": -162,
+    "signature": "void giSelectDialogAddItem( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCheckMagicMastered",
+    "script_func_id": -161,
+    "signature": "bool giCheckMagicMastered()",
+    "return_type": "bool",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGrantMagicSystem",
+    "script_func_id": -160,
+    "signature": "void giGrantMagicSystem( bool, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGrantSmithSystem",
+    "script_func_id": -159,
+    "signature": "void giGrantSmithSystem( bool, bool, bool, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giOpenSystemUi",
+    "script_func_id": -158,
+    "signature": "void giOpenSystemUi( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGrantSystemUi",
+    "script_func_id": -157,
+    "signature": "void giGrantSystemUi( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCheckPackProperty",
+    "script_func_id": -156,
+    "signature": "bool giCheckPackProperty( int, int )",
+    "return_type": "bool",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetVisibleMonster",
+    "script_func_id": -155,
+    "signature": "bool giGetVisibleMonster( string &in )",
+    "return_type": "bool",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetVisibleObject",
+    "script_func_id": -154,
+    "signature": "bool giGetVisibleObject( string &in )",
+    "return_type": "bool",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerGarb1",
+    "script_func_id": -153,
+    "signature": "void giPlayerGarb1( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAllPlayerGarb1",
+    "script_func_id": -152,
+    "signature": "void giAllPlayerGarb1()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerGarb2",
+    "script_func_id": -151,
+    "signature": "void giPlayerGarb2( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAllPlayerGarb2",
+    "script_func_id": -150,
+    "signature": "void giAllPlayerGarb2()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEventVolumeVisible",
+    "script_func_id": -149,
+    "signature": "void giEventVolumeVisible( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentRandomPosition",
+    "script_func_id": -148,
+    "signature": "void giPlayerCurrentRandomPosition( float, float )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerRandomPosition",
+    "script_func_id": -147,
+    "signature": "void giPlayerRandomPosition( int, float, float )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giMonsterSetVisible",
+    "script_func_id": -146,
+    "signature": "void giMonsterSetVisible( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerAddSkill",
+    "script_func_id": -145,
+    "signature": "void giPlayerAddSkill( int, int, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giShowHint",
+    "script_func_id": -144,
+    "signature": "void giShowHint( string &in, float, float )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectStopWithOBJ",
+    "script_func_id": -143,
+    "signature": "void giEffectStopWithOBJ( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectPlayWithOBJ",
+    "script_func_id": -142,
+    "signature": "void giEffectPlayWithOBJ( string &in, int, string &in )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectPlayWithNPC",
+    "script_func_id": -141,
+    "signature": "void giEffectPlayWithNPC( string &in, int, string &in )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectPlayWithCurrentPlayer",
+    "script_func_id": -140,
+    "signature": "void giEffectPlayWithCurrentPlayer( string &in, int )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectPlayWithPlayer",
+    "script_func_id": -139,
+    "signature": "void giEffectPlayWithPlayer( string &in, int, int )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giEffectPlay",
+    "script_func_id": -138,
+    "signature": "void giEffectPlay( string &in, int, float, float, float )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCGEffStop",
+    "script_func_id": -137,
+    "signature": "void giCGEffStop()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCGEffPlay",
+    "script_func_id": -136,
+    "signature": "void giCGEffPlay( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "gi2DSoundStopID",
+    "script_func_id": -135,
+    "signature": "void gi2DSoundStopID( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "gi2DSoundStop",
+    "script_func_id": -134,
+    "signature": "void gi2DSoundStop()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "gi2DSoundPlay",
+    "script_func_id": -133,
+    "signature": "int gi2DSoundPlay( string &in, int )",
+    "return_type": "int",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAlwaysJump",
+    "script_func_id": -132,
+    "signature": "void giAlwaysJump( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetPuzzleGameResult",
+    "script_func_id": -131,
+    "signature": "int giGetPuzzleGameResult()",
+    "return_type": "int",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giWorldMapSetState",
+    "script_func_id": -130,
+    "signature": "void giWorldMapSetState( string &in, int )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giArenaMusicStop",
+    "script_func_id": -129,
+    "signature": "void giArenaMusicStop( float )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giScriptMusicStop",
+    "script_func_id": -128,
+    "signature": "void giScriptMusicStop( int, float )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giScriptMusicPlay",
+    "script_func_id": -127,
+    "signature": "void giScriptMusicPlay( string &in, int, float, float )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giScriptMusicMute",
+    "script_func_id": -126,
+    "signature": "void giScriptMusicMute( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giBGMConfigIsInArea",
+    "script_func_id": -125,
+    "signature": "bool giBGMConfigIsInArea( string &in )",
+    "return_type": "bool",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giBGMConfigSetMusic",
+    "script_func_id": -124,
+    "signature": "void giBGMConfigSetMusic( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetPortrait",
+    "script_func_id": -123,
+    "signature": "void giSetPortrait( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGameObjectSetResearch",
+    "script_func_id": -122,
+    "signature": "void giGameObjectSetResearch( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giMonsterSetHide",
+    "script_func_id": -121,
+    "signature": "void giMonsterSetHide( string &in, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraSetDistOptEnable",
+    "script_func_id": -120,
+    "signature": "void giCameraSetDistOptEnable( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcUnHoldAct",
+    "script_func_id": -119,
+    "signature": "void giNpcUnHoldAct( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerUnHoldAct",
+    "script_func_id": -118,
+    "signature": "void giPlayerUnHoldAct( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGotoLogo",
+    "script_func_id": -117,
+    "signature": "void giGotoLogo()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetPlayerLevel",
+    "script_func_id": -116,
+    "signature": "int giGetPlayerLevel( int )",
+    "return_type": "int",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetFullMP",
+    "script_func_id": -115,
+    "signature": "void giSetFullMP()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetFullHP",
+    "script_func_id": -114,
+    "signature": "void giSetFullHP()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerCurrentSetVisible",
+    "script_func_id": -113,
+    "signature": "void giPlayerCurrentSetVisible( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAddEquipment",
+    "script_func_id": -112,
+    "signature": "void giAddEquipment( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAddQuestComplatePercentage",
+    "script_func_id": -111,
+    "signature": "void giAddQuestComplatePercentage( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giOpenMovieFlag",
+    "script_func_id": -110,
+    "signature": "void giOpenMovieFlag( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAddPlayerEquip",
+    "script_func_id": -109,
+    "signature": "void giAddPlayerEquip( int, int )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetPlayerLevel",
+    "script_func_id": -108,
+    "signature": "void giSetPlayerLevel( int, int )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerGetLeader",
+    "script_func_id": -107,
+    "signature": "int giPlayerGetLeader()",
+    "return_type": "int",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerSetAttr",
+    "script_func_id": -106,
+    "signature": "void giPlayerSetAttr( int, int, int )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraAutoSeek",
+    "script_func_id": -105,
+    "signature": "void giCameraAutoSeek( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraSeekToPlayer",
+    "script_func_id": -104,
+    "signature": "void giCameraSeekToPlayer()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraSetCollide",
+    "script_func_id": -103,
+    "signature": "void giCameraSetCollide( bool )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGOMTouch",
+    "script_func_id": -102,
+    "signature": "void giGOMTouch( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerOutTeam",
+    "script_func_id": -101,
+    "signature": "void giPlayerOutTeam( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerInTeam",
+    "script_func_id": -100,
+    "signature": "void giPlayerInTeam( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giDelProperty",
+    "script_func_id": -99,
+    "signature": "void giDelProperty( int, int, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAddProperty",
+    "script_func_id": -98,
+    "signature": "void giAddProperty( int, int, bool )",
+    "return_type": "void",
+    "param_count": 3,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetObjectVisible",
+    "script_func_id": -97,
+    "signature": "void giSetObjectVisible( string &in, bool visible )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool visible",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giStartCombat",
+    "script_func_id": -96,
+    "signature": "void giStartCombat( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giConfigCombatCamera",
+    "script_func_id": -95,
+    "signature": "void giConfigCombatCamera( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giConfigCombatBgm",
+    "script_func_id": -94,
+    "signature": "void giConfigCombatBgm( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giConfigCombatParam",
+    "script_func_id": -93,
+    "signature": "void giConfigCombatParam( bool, int, int, int )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "bool",
+        "type": "bool"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giAddCombatMonster",
+    "script_func_id": -92,
+    "signature": "void giAddCombatMonster( int, int )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giFlushTailYAngle",
+    "script_func_id": -91,
+    "signature": "void giFlushTailYAngle()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetTempGameState",
+    "script_func_id": -90,
+    "signature": "void giSetTempGameState( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetRandnum",
+    "script_func_id": -89,
+    "signature": "int giGetRandnum( int, int )",
+    "return_type": "int",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetMinimapExpmode",
+    "script_func_id": -88,
+    "signature": "void giSetMinimapExpmode( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCloseWeather",
+    "script_func_id": -87,
+    "signature": "void giCloseWeather()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giOpenWeather",
+    "script_func_id": -86,
+    "signature": "void giOpenWeather( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcResumeBeh",
+    "script_func_id": -85,
+    "signature": "void giNpcResumeBeh( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcPauseBeh",
+    "script_func_id": -84,
+    "signature": "void giNpcPauseBeh( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetGoodsOpenCondition",
+    "script_func_id": -83,
+    "signature": "void giSetGoodsOpenCondition( int, int )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giGetGoodsOpenCondition",
+    "script_func_id": -82,
+    "signature": "int giGetGoodsOpenCondition( int )",
+    "return_type": "int",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraSetMode",
+    "script_func_id": -81,
+    "signature": "void giCameraSetMode( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giMonsterStopPursuit",
+    "script_func_id": -80,
+    "signature": "void giMonsterStopPursuit()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSystemExchange",
+    "script_func_id": -79,
+    "signature": "void giSystemExchange( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcDelete",
+    "script_func_id": -78,
+    "signature": "void giNpcDelete( string &in )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNpcCreate",
+    "script_func_id": -77,
+    "signature": "void giNpcCreate( string &in, string &in, float, float, float )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giSetNpcVisible",
+    "script_func_id": -76,
+    "signature": "void giSetNpcVisible( string &in, bool visible )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool visible",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerUnLock",
+    "script_func_id": -75,
+    "signature": "void giPlayerUnLock()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerLock",
+    "script_func_id": -74,
+    "signature": "void giPlayerLock()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerDetachCollision",
+    "script_func_id": -73,
+    "signature": "void giPlayerDetachCollision( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerAttachCollision",
+    "script_func_id": -72,
+    "signature": "void giPlayerAttachCollision( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerSetVisible",
+    "script_func_id": -71,
+    "signature": "void giPlayerSetVisible( int, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giPlayerSetLeader",
+    "script_func_id": -70,
+    "signature": "void giPlayerSetLeader( int )",
+    "return_type": "void",
+    "param_count": 1,
+    "params": [
+      {
+        "raw": "int",
+        "type": "int"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giArenaComeFromHere",
+    "script_func_id": -69,
+    "signature": "int giArenaComeFromHere( string &in, string &in )",
+    "return_type": "int",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giArenaHint",
+    "script_func_id": -68,
+    "signature": "void giArenaHint()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giArenaReadyRestore",
+    "script_func_id": -67,
+    "signature": "void giArenaReadyRestore()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giArenaReady",
+    "script_func_id": -66,
+    "signature": "void giArenaReady()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giArenaLoad",
+    "script_func_id": -65,
+    "signature": "void giArenaLoad( string &in, string &in, string &in, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "string &in",
+        "type": "string"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraGetRoll",
+    "script_func_id": -64,
+    "signature": "float giCameraGetRoll()",
+    "return_type": "float",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraGetPitch",
+    "script_func_id": -63,
+    "signature": "float giCameraGetPitch()",
+    "return_type": "float",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraGetYaw",
+    "script_func_id": -62,
+    "signature": "float giCameraGetYaw()",
+    "return_type": "float",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraGetDist",
+    "script_func_id": -61,
+    "signature": "float giCameraGetDist()",
+    "return_type": "float",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraCtrlYPRD",
+    "script_func_id": -60,
+    "signature": "void giCameraCtrlYPRD( float, float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 5,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraCtrlDist",
+    "script_func_id": -59,
+    "signature": "void giCameraCtrlDist( float, bool )",
+    "return_type": "void",
+    "param_count": 2,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giCameraCtrlYPR",
+    "script_func_id": -58,
+    "signature": "void giCameraCtrlYPR( float, float, float, bool )",
+    "return_type": "void",
+    "param_count": 4,
+    "params": [
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "float",
+        "type": "float"
+      },
+      {
+        "raw": "bool",
+        "type": "bool"
+      }
+    ],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giNewGame",
+    "script_func_id": -57,
+    "signature": "void giNewGame()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giIMMEnd",
+    "script_func_id": -56,
+    "signature": "void giIMMEnd()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  },
+  {
+    "api_name": "giIMMBegin",
+    "script_func_id": -55,
+    "signature": "void giIMMBegin()",
+    "return_type": "void",
+    "param_count": 0,
+    "params": [],
+    "source": "launch.exe-string-scan"
+  }
+]

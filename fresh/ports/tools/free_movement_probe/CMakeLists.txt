@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.22)
+project(pal4_free_movement_probe LANGUAGES CXX)
+set(PAL4_ENABLE_GLES OFF CACHE BOOL "" FORCE)
+add_subdirectory(../../runtime portable)
+add_executable(free_movement_probe main.cpp)
+target_compile_features(free_movement_probe PRIVATE cxx_std_20)
+target_link_libraries(free_movement_probe PRIVATE pal4_portable_placement pal4_portable_package)

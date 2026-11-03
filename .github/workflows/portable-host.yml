@@ -1,0 +1,26 @@
+name: Portable host contracts
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: ['fresh/**', '.github/workflows/portable-host.yml']
+  push:
+    branches: [master]
+    paths: ['fresh/**', '.github/workflows/portable-host.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  windows-host:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure without game assets or proprietary SDKs
+        run: cmake -S fresh/ports/runtime -B "${{ runner.temp }}/pal4-host" -G "Visual Studio 17 2022" -A x64 -DBUILD_TESTING=ON -DPAL4_ENABLE_GLES=OFF -DPAL4_MODERN_GAMEPAD=OFF
+      - name: Build assertion-enabled contracts
+        run: cmake --build "${{ runner.temp }}/pal4-host" --config Debug --parallel 2
+      - name: Run contracts
+        run: ctest --test-dir "${{ runner.temp }}/pal4-host" -C Debug --output-on-failure
+      - name: Check release artifact audit tool
+        run: python -B fresh/ports/tools/test_audit_release.py

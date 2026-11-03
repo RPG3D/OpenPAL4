@@ -1,0 +1,38 @@
+{
+  "url": "https://downloads.sourceforge.net/project/tinyxml/tinyxml/2.5.3/tinyxml_2_5_3.zip",
+  "archive_sha256": "143590aa5930c1326315fb9fe3c0aab316a43751a44582dedd69331004b2c6a1",
+  "files": [
+    {
+      "name": "changes.txt",
+      "sha256": "a4caf0957064ec2455ea78c70756b43df56dc4c1994682d879f388098f701fb4"
+    },
+    {
+      "name": "readme.txt",
+      "sha256": "4fea168f2c7f8de6704f841f0ab7b6a3ca178625b6c2487ee12e2ecde65e310c"
+    },
+    {
+      "name": "tinystr.cpp",
+      "sha256": "717154a980d9ea730c879ff6a62e58ebedbb198ac6b5711df4f617b830496cd7"
+    },
+    {
+      "name": "tinystr.h",
+      "sha256": "25cef0d734c2575898950b96c2cfe8987bf05f30951d9f1db15124ed9bd7381f"
+    },
+    {
+      "name": "tinyxml.cpp",
+      "sha256": "8976d3235e89c6e9648eb20c45598bbedfbe5b3590cdcd15f4fd570958977bb9"
+    },
+    {
+      "name": "tinyxml.h",
+      "sha256": "f848619f2650e65f9563e2703fff432e3902f679bf940a5d75ffef9f39e47339"
+    },
+    {
+      "name": "tinyxmlerror.cpp",
+      "sha256": "df46e687a1d1583663838fc9596f526cdcaf4fb188c305b8f2ae2bdec0517102"
+    },
+    {
+      "name": "tinyxmlparser.cpp",
+      "sha256": "1a283f1402f1edb0d9a00fe811c03a1c1cafb9e562b81f20dd100608ee1b3111"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "component": "CEGUI",
+  "version": "0.4.1",
+  "license": "LGPL-2.1-or-later",
+  "evidence": [
+    "CEGUIVersion.h defines 0.4.1",
+    "CEGUISystem.cpp header grants LGPL 2.1 or later",
+    "COPYING contains LGPL 2.1"
+  ],
+  "source_archive_verified": false,
+  "notes": "License texts copied verbatim from the external source used by platform builds. This record does not verify the complete external source against an upstream archive.",
+  "files": [
+    {
+      "file": "COPYING",
+      "sha256": "885a03f54b157961236f46843e79972abfcd6890b6cbb368bc7eca328ff95a12"
+    },
+    {
+      "file": "PCRE-LICENSE",
+      "sha256": "8fbe5e606ba08fe8a11e1fc199d307b6838cbc6448fc33e44e30abedaac794df"
+    },
+    {
+      "file": "TinyXML-License",
+      "sha256": "322aa060739b89e5bf1d60d6185464e546704bea9d85d35b1ea26bcd578a7770"
+    }
+  ]
+}

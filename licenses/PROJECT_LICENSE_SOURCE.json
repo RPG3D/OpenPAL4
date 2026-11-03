@@ -1,0 +1,9 @@
+{
+  "spdx": "GPL-3.0-or-later",
+  "scope": "Project-owned code; see LICENSING.md for third-party and original-material exclusions.",
+  "license_text_source": "https://raw.githubusercontent.com/spdx/license-list-data/main/text/GPL-3.0-or-later.txt",
+  "upstream_license_url": "https://www.gnu.org/licenses/gpl-3.0.html",
+  "download_date": "2026-11-03",
+  "license_text_sha256": "fb981668c18a279e285fc4d83fba1e836cc84dd4daa73c9697d3cfd2d8aca6e0",
+  "bytes": 34674
+}

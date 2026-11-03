@@ -1,0 +1,19 @@
+#pragma once
+
+#include "pal4/xml_parser_node.h"
+
+#include <array>
+#include <cstdint>
+
+namespace pal4 {
+
+class XmlGenericTagParser final {
+public:
+    // IDA 0x5f2e80.
+    [[nodiscard]] static std::uint32_t Parse(
+        std::uint32_t node, std::uint32_t source,
+        std::array<std::uint32_t, 4>* position, int mode,
+        IXmlParserNodeRuntime& runtime);
+};
+
+}  // namespace pal4
